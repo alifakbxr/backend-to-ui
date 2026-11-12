@@ -1,34 +1,42 @@
-# Engineering workflow and acceptance criteria
+# Workflow and release gates
 
-This document explains the intent behind the short `SKILL.md`. It is not a universal implementation recipe; the agent must follow the target repository's architecture and user needs.
+This guide explains how the short Agent Skill becomes a complete product interface. It is stack-neutral and does not replace the host repository's architecture.
 
-## 1. Context comes before appearance
+## 1. Read the product and backend
 
-Collect evidence from README, user journeys, route names, existing wording, policy classes, tests and existing screens. State who uses the product and what a successful task looks like. Avoid transferring a generic SaaS layout to an unrelated domain.
+Inspect existing source, screenshots, brand tokens, user stories, handlers, policies and data shapes. Identify the primary user's task, device and product mode: operate, explore, play, create, read or persuade. Distinguish evidence from inference. A screenshot with negative visual feedback is evidence that the existing UI quality gate failed.
 
-## 2. Trace the real data path
+Trace database/query → serialization/page props → network → client state → view. Attach each important control and value to a real authorized operation or field. No fake metrics or unsupported actions.
 
-Inspect database/query → backend handler → serialization/page props → transport → client data owner → render. For each important view, trace where values come from and which operations are authorized. Identify query filters, pagination, validation, errors and lifecycle behaviors. Reject fantasy KPIs and unsupported buttons.
+## 2. Select a composition, not a theme
 
-## 3. Keep work near its owner
+Outline two truly different options. Choose based on task clarity, proportion, platform, brand fidelity and maintenance. Determine where the user's attention belongs. The defining object or activity should own an appropriate share of the page; header chrome, badges and supporting stats come second.
 
-Prefer query-side filtering/aggregation/pagination for large data; limit payload shape; avoid N+1; add request deduplication and race protection where necessary; scope private caching to authenticated identity and tenant; avoid whole-list rendering. Choose idiomatic techniques for the current framework, rather than imposing a one-size-fits-all client cache.
+Decide a coherent typography, spacing, imagery, motion and color system. Avoid the automatic SaaS dashboard silhouette. A playful interactive app may need a large tactile object; a high-volume enterprise screen needs readable density; an editor needs a large canvas.
 
-## 4. Implement end-to-end
+See [design.md](../skills/backend-to-ui/references/design.md) and [cases.md](../skills/backend-to-ui/references/cases.md).
 
-Ship the primary workflow before decoration. For each screen account for success, empty, loading, timeout, forbidden, validation, rate limits and recoverable failure where relevant. Use accessible inputs, keyboard control, correct focus, clear status copy and responsive layouts. No inert actions.
+## 3. Keep data work near its owner
 
-## 5. Review with evidence
+Prefer query-side filtering/aggregation/pagination for large data. Prevent N+1, repeated requests and late-response races; scope private caches. Use existing SSR/SPA/native idioms instead of installing a competing stack. Profile where practical; performance targets are not measured results.
 
-Tests should exercise the real flows, not only compilation. When available, inspect the rendered desktop/mobile UI, measure network and rendering bottlenecks, and test rapid searching, long records, failed requests, pagination and permissions. Report which checks were performed and which were not possible.
+## 4. Implement and verify real flows
+
+Complete the primary user task before decorative polish. Include loading, empty, error, permission and mutation behavior where applicable. Keep controls accessible and test keyboard/touch, reduced motion, focus, narrow layout and latency.
+
+## 5. Run a visual review loop
+
+Capture desktop and phone (plus an intermediate size if feasible), inspect **the actual page**, rank high-impact defects, fix composition/hierarchy first, then capture again. A technically working UI is not ready if its principal feature is lost in a tiny central panel or its visual language could be transplanted to an unrelated product.
+
+Read the full [visual-review.md](../skills/backend-to-ui/references/visual-review.md) gates. A serious product-fit, composition or usability defect is a stop-ship condition, not polish backlog. If no rendering tools are available, disclose that visual review could not be completed.
 
 ## Completion criteria
 
-- Main user task works through the real backend (or clearly labeled fixtures when live access is impossible).
-- UI choices fit the product and user context; no generic fillers or unsupported features.
-- Private data is not inadvertently exposed; server authorization remains intact.
-- Lists and requests scale reasonably; the agent has evidence for performance claims.
-- Responsive design, accessibility and failure recovery have been reviewed.
-- Changes, test results and limitations are stated clearly.
+- Primary user flow works through authorized backend operations, or fixtures are explicitly labeled.
+- Chosen composition fits the task; real product material and language replace generic filler.
+- No fake features, secret exposure or client-only authorization assumptions.
+- Requests and rendering are bounded; performance claims are tied to available evidence.
+- Screenshot inspection and redesign loop happened when tools permitted.
+- Tests, remaining issues and limitations are stated precisely.
 
-**One-shot** means one user request can trigger the full workflow, not that the outcome is guaranteed on every unfamiliar repository.
+**One-shot** means one user prompt can initiate all these stages, not that quality is guaranteed without user context or tools.

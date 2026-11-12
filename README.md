@@ -26,7 +26,7 @@ Choose your agent and install scope in the prompts. To install globally across y
 npx skills add alifakbxr/backend-to-ui --skill backend-to-ui -g
 ```
 
-**Publication status:** These commands become usable once `alifakbxr/backend-to-ui` has been created as a public GitHub repository. Until then, test from this local repository with `npx skills add . --list` or install from the local folder. If the GitHub owner changes, replace `alifakbxr` in these commands.
+**Published source:** [alifakbxr/backend-to-ui](https://github.com/alifakbxr/backend-to-ui) is public. Verify discovery with `npx skills add alifakbxr/backend-to-ui --list`. If you fork the repository, change the owner in installation commands.
 
 Compatible Agent Skills hosts include Claude Code, Gemini CLI, Antigravity, and Codex. Host capabilities vary: the skill provides instructions, not an automatic execution environment. [Detailed installation and usage](docs/USAGE.md).
 
@@ -38,16 +38,29 @@ Compatible Agent Skills hosts include Claude Code, Gemini CLI, Antigravity, and 
 | Routes, API contracts and page props | Data access without invented endpoints | Responsive and accessible behavior |
 | Authorization and business rules | Pagination, cache boundaries, cancellation | Rendering and request performance when tools permit |
 | Existing product identity | Forms and mutations only if the backend supports them | Clear, evidence-based delivery notes |
+| Product mode and primary activity | Domain-specific composition, not interchangeable UI chrome | Full-page screenshot critique and a corrective design pass |
 
 It adapts to REST, GraphQL, RPC/gRPC, Inertia, SSR, server templates, SPA, native, and realtime patterns where supported by the project. **No automatic rewrite to React or any other stack.**
 
 ## How it works
 
-**Backend discovery → user-task mapping → context-based art direction → implementation → performance and visual QA.**
+**Backend discovery → user-task mapping → two composition options → context-specific art direction → implementation → screenshot critique → repair.**
 
 The skill is designed for a one-shot *request*, not one-shot guesswork. A coding agent must still inspect the repository and run the checks its environment actually supports. It should not invent features, silently bypass authorization, or report measurements it did not take.
 
-See [the workflow and its safeguards](docs/WORKFLOW.md) and the [source instructions](skills/backend-to-ui/SKILL.md).
+See [the workflow and its safeguards](docs/WORKFLOW.md), [visual review gates](skills/backend-to-ui/references/visual-review.md), [contextual examples](skills/backend-to-ui/references/cases.md), [design research and credits](docs/DESIGN_SOURCES.md), and the [source instructions](skills/backend-to-ui/SKILL.md).
+
+## When the generated UI feels generic
+
+A passing build is not the finish line. If the dominant feature is lost in a tiny central widget, if empty space has no purpose, or if UI chrome overwhelms the user task, the skill now treats it as a **visual stop-ship defect**. It asks the agent to inspect real screenshots, change the composition, and re-check desktop and mobile.
+
+For example, an arcade gacha experience should prioritize the playable machine, pull/reveal feedback and collection. It should not look like a generic SaaS dashboard with neon badges. A warehouse picking screen, on the other hand, should prioritize scan speed and a dense actionable queue.
+
+For a redesign, use this one prompt:
+
+> Use backend-to-ui to redesign this interface. Keep the existing backend behavior and tech stack. Diagnose generic layout and visual hierarchy from rendered screenshots, choose a product-specific composition, rebuild, test desktop/mobile and fix the largest visual defects.
+
+See [case-based design reasoning](skills/backend-to-ui/references/cases.md) and [visual stop-ship criteria](skills/backend-to-ui/references/visual-review.md). The skill cannot guarantee aesthetic quality or inspect a screen without access to browser/device tools; limitations must be reported.
 
 ## Example
 
@@ -73,6 +86,8 @@ skills/backend-to-ui/
 └── references/              # Read only when relevant
     ├── data.md
     ├── design.md
+    ├── cases.md
+    ├── visual-review.md
     ├── performance.md
     ├── stacks.md
     └── verify.md
@@ -96,6 +111,7 @@ CI runs the same structural checks on pull requests. These verify metadata, refe
 - [Security and trust model](SECURITY.md)
 - [Contributing](CONTRIBUTING.md)
 - [Changelog](CHANGELOG.md)
+- [Design research & acknowledgments](docs/DESIGN_SOURCES.md)
 - [How to publish on skills.sh](docs/PUBLISHING.md)
 
 ## License and acknowledgment

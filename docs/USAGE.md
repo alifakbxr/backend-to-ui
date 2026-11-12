@@ -49,6 +49,12 @@ For an existing frontend:
 
 > Use backend-to-ui to audit and improve the current frontend. Do not change the backend contract or replace the stack. Fix the real user flows and performance bottlenecks, then verify behavior and visual quality.
 
+## When the UI is technically correct but ugly
+
+> Use backend-to-ui. This existing UI is generic. Audit the full-page desktop and mobile screenshots first. Identify the dominant user task, compare two product-specific compositions, preserve backend contracts and working features, rebuild the hierarchy, review actual renders and fix serious visual defects before finishing.
+
+The issue might be **composition, density, material or copy**, not a color palette. This skill explicitly rejects a small widget stranded in a wide desktop viewport, fake dashboard chrome or gameplay that looks like a generic SaaS admin page. Read the [visual stop-ship gates](../skills/backend-to-ui/references/visual-review.md).
+
 ## What to expect
 
 The agent should report the backend contracts it discovered; pages and flows implemented; how permissions, loading and failures work; data/pagination/cache decisions; what was actually tested; and remaining limitations. It should not claim a Lighthouse score or live API verification without measurements.
@@ -63,7 +69,7 @@ A skill is instruction, not a guarantee of a polished application. It cannot aut
 | Agent ignores the skill | Explicitly mention `backend-to-ui` in the prompt; make sure skill files are in the selected agent's search path |
 | UI invents features | Require a route/permission-to-action map and reject elements without supported operations |
 | UI is slow | Capture a real network trace and rendering profile; inspect `references/performance.md` before optimizing |
-| Design looks generic | Identify the specific user's main task and follow the critique checklist in `references/design.md` |
+| Design looks generic | Inspect desktop and mobile screenshots; use product modes, case studies and visual stop-ship gates before changing colors |
 | Tests require login | Provide a safe test account/fixture; do not place real credentials in the skill or repository |
 
 ## Maintenance
