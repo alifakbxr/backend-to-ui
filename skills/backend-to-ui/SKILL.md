@@ -1,43 +1,47 @@
 ---
 name: backend-to-ui
-description: Turn existing backends, APIs, server routes, database-backed endpoints, Inertia props, GraphQL, RPC or realtime contracts into complete, fast, accessible, human-centered frontends. Use when building UI from backend-only code, connecting frontend to real data, redesigning a full-stack app, fixing slow data-heavy screens, or implementing a working frontend in one prompt. Works with any tech stack.
+description: Turn existing backend routes, APIs, models, page props and business rules into complete, fast, accessible, distinctive frontends for any stack. Use for backend-only projects, redesigns, data-heavy UIs and one-shot implementation. Includes context-first art direction, anti-generic design critique, real-data integration and visual verification.
 license: MIT
 metadata:
-  version: "1.0.0"
+  version: "1.1.0"
 ---
 
 # Backend to UI
 
-Transform **what the backend can do** into **what people need to do**. Make a usable product, not a JSON viewer or a generic dashboard.
+Turn **what the backend supports** into **what people need and want to use**. A technically correct interface that looks interchangeable, wastes the viewport, or misunderstands its product is unfinished.
 
 ## How to work
 
-One user request = one end-to-end execution when the repository and tools allow it. Do not stop after producing a plan or a mockup. Respect the user's scope and existing code. Ask only for genuinely blocking information or irreversible/high-risk changes; otherwise make conservative assumptions and name them.
+One request should run end-to-end when the repository and tools permit. Do not stop at a plan or design mockup. Keep the existing stack, auth and brand. Ask only about blockers or high-risk changes; label reasonable assumptions instead of inventing facts.
 
-1. **Inspect.** Identify stack, architecture, actual routes and handlers, auth/permissions, payload shapes, pagination, validation, failure semantics, existing frontend, and repository conventions. Read [contracts](references/data.md) before wiring data. Never invent unsupported CRUD, roles, charts, metrics or APIs.
-2. **Understand.** From names, workflows, and product evidence, infer the user's job, device, vocabulary and most important action. Distinguish observed facts from assumptions. Read [design](references/design.md). Choose a visual language appropriate for the domain, not an automatic "AI SaaS" aesthetic. Existing brand and components take precedence.
-3. **Map.** Connect each important user task to an endpoint/handler, authorization, request/response field, UI state, and recovery path. Favor direct, idiomatic integration: Inertia page props where they exist, SSR/templates where appropriate, native patterns on mobile; do not force REST + React.
-4. **Plan for speed.** Before building large screens, define data volume, who filters/sorts, page/cursor strategy, N+1 avoidance, payload projection, concurrency, caching scope, reactive ownership, and failure behavior. Read [performance](references/performance.md). Never solve a server-scale problem with an enormous browser array.
-5. **Build.** Implement the top user task all the way through. Include loading, empty, error, retry, unauthorized/forbidden, validation, and mutation state where applicable. Provide natural copy, keyboard controls, responsive layout, accessible semantics, and real interactions. Use current project's libraries and architecture unless there is a demonstrable reason not to.
-6. **Test, critique, fix.** Run real available tests/builds and inspect actual UI if browser/device tools exist. Test cancellation/races, failed and slow requests, long lists, permissions, and small screens. Review whether the interface fits its users; make at least one substantive correction where warranted. Read [verification](references/verify.md). Never call fixtures "live" or target budgets "measurements".
-7. **Deliver.** Summarize changed files, working user flows, real endpoints, safeguards for performance, tests run, unverified areas, and follow-up risks. Create lightweight design/contract notes only when they clarify maintenance; no mandatory documentation ceremony.
+1. **Inspect.** Read routes/handlers, schemas, tests, permissions, response shapes, pagination, errors, existing screens, assets, style tokens and product docs. Read [data contracts](references/data.md). Never invent actions, roles, KPI values or endpoints.
+2. **Understand.** Identify the real user, job, device, environment, emotional expectation and **product mode**: operate, explore, play, create, read or persuade. Separate observed facts from assumptions. Do not infer the information architecture from database table names. Read [design direction](references/design.md).
+3. **Map.** Link each principal user task and visible action to an existing authorized handler, fields, states and recovery flow. Preserve SSR, native, Inertia, GraphQL or other idioms already used; no automatic React/REST rewrite.
+4. **Plan for speed.** Trace database → serializer → transport → UI state → rendered view. Plan bounded payloads, pagination, cache scope, request deduplication, cancellation/race safety and efficient list rendering. Read [performance](references/performance.md).
+5. **Art direct.** Before writing layout code, briefly consider **two materially different compositions** appropriate to the product; select one and state the rationale in the work. Define the dominant subject or task, visual hierarchy, density, typography, color roles, assets and motion. Be specific to the domain, not a default dashboard skin. See [product examples](references/cases.md). Never use large blank desktop margins to hide a phone-sized UI unless that presentation is explicitly the product.
+6. **Build.** Implement the main user flow and its real states. Give the primary interaction an appropriate share of screen space and visual prominence. Make controls legible and functional; provide loading, empty, error, retry, validation, permission and mutation states where relevant. Do not add decorative complexity in place of useful content.
+7. **Test, critique, fix.** Run available tests and inspect **actual rendered desktop and mobile screenshots** (plus an intermediate width when possible). Apply [visual review gates](references/visual-review.md) and [functional verification](references/verify.md). If a serious gate fails, **change the design and review again**; do not stop at a CSS tweak or report success based only on a passing build. Test real data timing and request races. If render tools are unavailable, report visual QA as unverified rather than asserting it passed.
+8. **Deliver.** Describe what the user can do, real contracts used, the chosen design rationale, notable visual correction(s), performance controls, tests actually run and outstanding risks. Documentation proportional to the project; no required paperwork for its own sake.
 
-## Non-negotiables
+## Hard gates
 
-- **Backend truth.** Every displayed value or action is backed by a real field/operation or explicitly labeled demo data. Never bypass permission checks.
-- **User truth.** Information architecture comes from tasks, not the names of database tables. Clarity before decoration.
-- **Speed truth.** No unbounded list DOM, unconditional full-database downloads, uncontrolled request fanout, duplicate request storms, stale search results, cross-tenant cache leaks, or expensive transformations on every render.
-- **Design truth.** No default gradient hero, glass cards, ornamental blobs, fake KPIs, infinite badge lists, or oversized headings used to disguise thin content. A screen must feel right for this exact product.
-- **Evidence truth.** Test claims require execution. Report tool/network limits honestly. One-shot means one *request*, not skipping analysis or QA.
+- **Backend truth:** no fabricated data, fake functionality, hidden authorization bypasses or unsafe client-side assumptions.
+- **Product truth:** screen hierarchy must express the product's defining action or subject. A playful game, a dense operations queue and a medical record must not receive the same page shell.
+- **Composition truth:** do not ship a tiny central app surrounded by unused desktop canvas, uniform card grids, repeated pill badges or layers of chrome unless they genuinely serve the task.
+- **Craft truth:** typography, proportion, assets, spacing, color and motion must form one coherent direction. Avoid gradient/glass/neon/rounded-card defaults; these are allowed only when supported by the product's visual world and executed with care.
+- **Interaction truth:** all visible affordances work; important events have feedback; motion respects reduced-motion preferences and performance.
+- **Evidence truth:** screenshot critique requires a screenshot, performance claims require measurements, live API claims require live requests. One-shot means one user prompt, **not** one unreviewed visual pass.
 
-## References (read only as needed)
+## References (read when needed)
 
-- [data.md](references/data.md): inspect backend + contract-to-UI + auth/mutations
-- [performance.md](references/performance.md): API/client data pipeline, pagination, race safety, budgets
-- [design.md](references/design.md): human context, visual system, anti-slop critique
-- [stacks.md](references/stacks.md): idioms across server, SPA, native, realtime stacks
-- [verify.md](references/verify.md): UI, functional, security, performance and acceptance tests
+- [data.md](references/data.md) — real contracts, permissions, state handling
+- [performance.md](references/performance.md) — efficient data pipeline, rendering, cache and races
+- [design.md](references/design.md) — product modes and evidence-based visual direction
+- [cases.md](references/cases.md) — contextual examples including arcade, operations and reading
+- [visual-review.md](references/visual-review.md) — stop-ship visual gates and screenshot iteration
+- [stacks.md](references/stacks.md) — stack-specific integration choices
+- [verify.md](references/verify.md) — functional and evidence-based acceptance tests
 
 ## Example trigger
 
-> Use backend-to-ui. Build the frontend for this repository from the existing backend. Keep all current business logic. Make the UI appropriate to its users, fast with real data, and test it.
+> Use backend-to-ui to build or improve this project's frontend. Understand its users and backend first. Create a distinctive interface, keep real data fast, inspect screenshots, fix generic design, and test the working flows.

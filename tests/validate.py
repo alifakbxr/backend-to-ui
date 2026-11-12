@@ -61,7 +61,7 @@ def main() -> None:
     check("# Backend to UI" in body, "Skill body must have a heading")
     check(len(skill.splitlines()) < 500, "Keep SKILL.md concise; use references")
 
-    for target in ("Inspect.", "Understand.", "Map.", "Plan for speed.", "Build.", "Test, critique, fix.", "Deliver."):
+    for target in ("Inspect.", "Understand.", "Map.", "Plan for speed.", "Art direct.", "Build.", "Test, critique, fix.", "Deliver."):
         check(target in body, f"Missing essential workflow step: {target}")
     for concept in ("permission", "backend", "speed", "test", "user"):
         check(concept in body.lower(), f"Essential concept missing: {concept}")
@@ -71,6 +71,16 @@ def main() -> None:
     for ref in refs:
         check(ref.stat().st_size > 500, f"Reference unexpectedly empty: {ref}")
         check(ref.name in skill, f"Reference is not discoverable from SKILL.md: {ref.name}")
+
+    # Regression gate: generic-skin redesigns must be explicitly blocked by skill guidance.
+    check("product mode" in skill.lower(), "Skill must require product-mode analysis")
+    check("two materially different compositions" in skill.lower(), "Skill must require competing compositions")
+    check("actual rendered desktop and mobile screenshots" in skill.lower(), "Skill must require render-based critique")
+    visual = (SKILL_DIR / "references/visual-review.md").read_text(encoding="utf-8").lower()
+    case_studies = (SKILL_DIR / "references/cases.md").read_text(encoding="utf-8").lower()
+    check("stop-ship" in visual and "viewport composition" in visual, "Missing visual stop-ship gate")
+    check("gacha" in case_studies and "warehouse" in case_studies, "Missing contrasting design case studies")
+    check((ROOT / "docs/DESIGN_SOURCES.md").is_file(), "Missing independent design sources and acknowledgments")
 
     for rel in REQUIRED_DOCS:
         path = ROOT / rel
