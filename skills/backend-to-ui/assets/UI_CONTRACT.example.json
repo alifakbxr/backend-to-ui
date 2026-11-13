@@ -1,0 +1,53 @@
+{
+  "schema_version": 1,
+  "product": {
+    "name": "EXAMPLE ONLY — replace with your actual product",
+    "mode": "operate",
+    "primary_user": "support operator",
+    "primary_task": "resolve an incoming request"
+  },
+  "frontend": {
+    "stack": "existing Vue 3",
+    "choice": "existing-authorized"
+  },
+  "direction": {
+    "status": "provisional",
+    "source": "inference:sample task context only; not approved branding",
+    "dominant_subject": "current support request",
+    "composition": "queue and detail workspace",
+    "density": "operational",
+    "visual_principles": [
+      "make request resolution dominant",
+      "reuse observed UI tokens"
+    ],
+    "rejected_patterns": [
+      "decorative KPI strip"
+    ]
+  },
+  "composition": {
+    "alternatives": [
+      {
+        "id": "queue-detail",
+        "description": "split queue with adjacent record and primary action"
+      },
+      {
+        "id": "task-first",
+        "description": "task-first workspace with collapsible queue"
+      }
+    ],
+    "selected": "queue-detail",
+    "reason": "examples only; select by actual observed workflow"
+  },
+  "preserve": {
+    "routes": [],
+    "components": [],
+    "state": [],
+    "permissions": []
+  },
+  "evidence": [
+    {
+      "claim": "illustrative example; replace all values",
+      "source": "inference:example only"
+    }
+  ]
+}

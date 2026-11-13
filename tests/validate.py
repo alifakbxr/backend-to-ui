@@ -18,6 +18,9 @@ REQUIRED_DOCS = (
     "evals/scenarios.json",
     "evals/score.py",
     "tests/test_evals.py",
+    "tests/test_portability.py",
+    "tests/test_compare_agents.py",
+    "evals/compare_agents.py",
     ".github/workflows/validate.yml",
 )
 
@@ -75,6 +78,11 @@ def main() -> None:
 
     # Regression gate: generic-skin redesigns must be explicitly blocked by skill guidance.
     check("product mode" in skill.lower(), "Skill must require product-mode analysis")
+    check("UI_CONTRACT.json" in skill, "Skill must load project design contract")
+    check("zero design authority" in skill.lower(), "Agent taste must not override approved direction")
+    check((SKILL_DIR / "scripts/doctor.py").is_file(), "Missing host discovery diagnostic")
+    check((SKILL_DIR / "scripts/check_contract.py").is_file(), "Missing design contract validator")
+    check((SKILL_DIR / "assets/UI_CONTRACT.example.json").is_file(), "Missing contract example")
     check("mandatory frontend stack gate" in skill.lower(), "Missing mandatory frontend stack gate")
     check("ask one direct question" in skill.lower(), "Missing ask-first requirement")
     check("never silently fall back to native html" in skill.lower(), "Missing native HTML fallback prohibition")
@@ -118,7 +126,7 @@ def main() -> None:
     check("--skill backend-to-ui" in readme, "README must specify the skill name")
     check("private" in (ROOT / "SECURITY.md").read_text().lower(), "Security reporting guidance missing")
 
-    print(f"PASS: Agent Skill metadata, {len(refs)} references, {len(REQUIRED_DOCS)} docs/config files, {link_count} local links, no promotional media")
+    print(f"PASS: Agent Skill metadata, {len(refs)} references, {len(REQUIRED_DOCS)} docs/config files, {link_count} local links, contract+host checks, no promotional media")
 
 
 if __name__ == "__main__":
