@@ -72,4 +72,4 @@ The default scorer expects **all scenarios**. `--allow-partial` is for a focused
 - Disclose untested agent/version/platform combinations and any missing browser or backend credentials.
 - Do not market these scenario cases as executed cross-agent benchmarks before recording real runs.
 
-See [release process](../docs/RELEASE.md) and [visual stop-ship gates](../skills/backend-to-ui/references/visual-review.md).
+See [release/contribution guidance](../README.md#validate-and-contribute) and [visual stop-ship gates](../skills/backend-to-ui/references/visual-review.md).

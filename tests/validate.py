@@ -14,14 +14,10 @@ REQUIRED_DOCS = (
     "SECURITY.md",
     "CONTRIBUTING.md",
     "CHANGELOG.md",
-    "docs/USAGE.md",
-    "docs/WORKFLOW.md",
-    "docs/RELEASE.md",
     "evals/README.md",
     "evals/scenarios.json",
     "evals/score.py",
     "tests/test_evals.py",
-    "docs/PUBLISHING.md",
     ".github/workflows/validate.yml",
 )
 
@@ -91,20 +87,25 @@ def main() -> None:
     case_studies = (SKILL_DIR / "references/cases.md").read_text(encoding="utf-8").lower()
     check("stop-ship" in visual and "viewport composition" in visual, "Missing visual stop-ship gate")
     check("gacha" in case_studies and "warehouse" in case_studies, "Missing contrasting design case studies")
-    check((ROOT / "docs/DESIGN_SOURCES.md").is_file(), "Missing independent design sources and acknowledgments")
+    check((SKILL_DIR / "references/existing-frontend.md").is_file(), "Missing existing frontend playbook")
+    check("existing frontend" in skill.lower(), "Missing support for established frontend projects")
+    check("frontend-only" in (SKILL_DIR / "references/existing-frontend.md").read_text(encoding="utf-8").lower(),
+          "Existing frontend playbook must allow projects without a backend")
 
     for rel in REQUIRED_DOCS:
         path = ROOT / rel
         check(path.is_file(), f"Required documentation or CI file missing: {rel}")
         check(path.stat().st_size > 100, f"Suspiciously empty repository file: {rel}")
 
-    cover, intro = ROOT / "media/cover.png", ROOT / "media/intro.mp4"
-    check(cover.is_file() and cover.read_bytes()[:8] == b"\x89PNG\r\n\x1a\n", "Cover must be a valid PNG")
-    check(intro.is_file() and b"ftyp" in intro.read_bytes()[:32], "Introduction must be an MP4")
-    check(intro.stat().st_size < 10_000_000, "Keep committed introduction video under 10 MB")
+    gif = ROOT / "media/intro.gif"
+    check(gif.is_file() and gif.read_bytes()[:6] in (b"GIF89a", b"GIF87a"),
+          "Introduction must be a valid GIF")
+    check(gif.stat().st_size < 3_000_000, "Keep committed introduction GIF under 3 MB")
+    check(not (ROOT / "docs").exists(), "The docs/ folder should be removed after consolidation")
+    check(not (ROOT / "media/intro.mp4").exists(), "Replace the MP4 with a GIF")
 
     markdown_files = [ROOT / "README.md", ROOT / "SECURITY.md", ROOT / "CONTRIBUTING.md",
-                      *list((ROOT / "docs").glob("*.md")), ROOT / "evals/README.md", skill_file, *refs]
+                      ROOT / "evals/README.md", skill_file, *refs]
     link_count = sum(check_link_targets(path) for path in markdown_files)
 
     # The evaluator scenarios are consistency-checked separately by unittest.
@@ -112,17 +113,17 @@ def main() -> None:
     scenarios = json.loads((ROOT / "evals/scenarios.json").read_text(encoding="utf-8"))
     check(scenarios.get("schema_version") == 1, "Unsupported evaluation schema")
     cases = scenarios.get("scenarios", [])
-    check(len(cases) >= 15, "Not enough evaluation scenarios")
+    check(len(cases) >= 25, "Not enough evaluation scenarios")
     check({"ask_stack", "implement", "audit"}.issubset({c["expected"]["action"] for c in cases}),
           "Missing stack/implementation/audit scenario classes")
 
     readme = (ROOT / "README.md").read_text(encoding="utf-8")
-    check("[![Watch the introduction](media/cover.png)](media/intro.mp4)" in readme, "README must show a clickable video cover")
+    check("![product-ui — introduction](media/intro.gif)" in readme, "README must display the GIF")
     check("--skill backend-to-ui" in readme, "README must specify the skill name")
-    check("not a recording of a live API" in readme, "Demo provenance must be explicit")
+    check("not a live backend integration recording" in readme, "Demo provenance must be explicit")
     check("private" in (ROOT / "SECURITY.md").read_text().lower(), "Security reporting guidance missing")
 
-    print(f"PASS: Agent Skill metadata, {len(refs)} references, {len(REQUIRED_DOCS)} docs/config files, {link_count} local links, cover and MP4")
+    print(f"PASS: Agent Skill metadata, {len(refs)} references, {len(REQUIRED_DOCS)} docs/config files, {link_count} local links, intro GIF")
 
 
 if __name__ == "__main__":

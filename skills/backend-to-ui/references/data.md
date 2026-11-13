@@ -1,4 +1,6 @@
-# Read backend data as a product contract
+# Read real data as a product contract
+
+Frontend-only projects can rely on local state, static data, embedded content or mocked integration boundaries. Do not fabricate an endpoint or treat absence of backend access as an obstacle to UI/UX improvements. If an API does exist, use its real contract, authorization and failure semantics.
 
 ## Discovery order
 

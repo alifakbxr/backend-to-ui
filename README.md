@@ -1,134 +1,105 @@
-# backend-to-ui
+# product-ui
 
-**Your backend already knows what the app can do. Build the interface people need.**
+**Build the interface your product actually needs.**
 
-[![Watch the introduction](media/cover.png)](media/intro.mp4)
+![product-ui — introduction](media/intro.gif)
 
-[Watch the 28-second introduction](media/intro.mp4) · [Explore the skill](skills/backend-to-ui/SKILL.md)
+**Repository:** `product-ui` · **Agent skill:** `backend-to-ui`
 
-`backend-to-ui` is an open [Agent Skill](https://agentskills.io/specification) for turning an existing backend into a useful, well-designed frontend. It reads the code you have, understands the product context, maps actual contracts to user tasks, and implements and tests the result. It is not a template, UI kit, or replacement frontend framework.
+An open, stack-neutral [Agent Skill](https://agentskills.io/specification) to **build, redesign, audit or improve an existing frontend**, or turn a real backend into a useful interface. It understands the product, respects the current framework, maps real data and interactions, and asks for visual/functional QA—not another interchangeable AI dashboard.
 
-**One prompt, when your coding agent has access to the repository and you have already selected or authorized its frontend stack:**
-
-> Use backend-to-ui to build the frontend for this backend using Vue + Inertia.
+No UI kit, new framework, runtime service or automatic migration is imposed.
 
 ## Install
 
-Requires a supported coding agent and Node.js 22.20+ for the [`skills` CLI](https://skills.sh/docs/cli). Run in your project:
+Requires Node.js and a [supported coding agent](https://skills.sh/docs). In your project:
 
 ```bash
-npx skills add alifakbxr/backend-to-ui --skill backend-to-ui
+npx skills add alifakbxr/product-ui --skill backend-to-ui
 ```
 
-Choose your agent and install scope in the prompts. To install globally across your coding projects:
+Global (select the agents you use):
 
 ```bash
-npx skills add alifakbxr/backend-to-ui --skill backend-to-ui -g
+npx skills add alifakbxr/product-ui --skill backend-to-ui -g
 ```
 
-**Published source:** [alifakbxr/backend-to-ui](https://github.com/alifakbxr/backend-to-ui) is public. Verify discovery with `npx skills add alifakbxr/backend-to-ui --list`. If you fork the repository, change the owner in installation commands.
+Check discovery without installing:
 
-Compatible Agent Skills hosts include Claude Code, Gemini CLI, Antigravity, and Codex. Host capabilities vary: the skill provides instructions, not an automatic execution environment. [Detailed installation and usage](docs/USAGE.md).
+```bash
+npx skills add alifakbxr/product-ui --list
+```
 
-## Tech stack: ask first, never assume
+The skill is designed for Claude Code, Gemini CLI, Antigravity and Codex, as well as other compatible Agent Skills hosts. Actual tool availability varies by agent. GitHub is the distribution source; listing/ranking on skills.sh depends on its indexing and is not guaranteed immediately.
 
-**New in 1.2:** If your request is to **build or redesign frontend code** and you have not specified a frontend stack, the agent first asks which stack you want. Even when it detects an existing Vue, React or plain-HTML frontend, it asks for confirmation unless you explicitly said **"use the existing frontend stack"**.
+## Use it
 
-- `Use backend-to-ui. Build the UI with Vue 3 + Inertia.` → implement in one request.
-- `Use backend-to-ui. Reuse the existing frontend stack.` → implement if the stack is clearly present.
-- `Use backend-to-ui. Build the UI for this API.` → **ask for the frontend stack before writing code.**
-- `Use backend-to-ui to audit this existing UI.` → perform a read-only audit without blocking on stack selection.
+### Improve an existing frontend
 
-The skill never silently defaults to native HTML/CSS/JavaScript. Choosing native HTML explicitly is valid.
+> Use backend-to-ui. Keep the existing frontend stack. Audit these screens, fix the UX and visual hierarchy, preserve working routes/data/state, and test desktop/mobile.
 
-See the [mandatory stack policy](skills/backend-to-ui/references/stack-selection.md) and [evaluation matrix](evals/README.md). The *one-shot* promise applies when this decision is already resolved.
+### Build a frontend from backend code
+
+> Use backend-to-ui with Vue 3 + Inertia. Inspect this backend and implement the real user workflows. Keep data and rendering fast. Verify behavior and appearance.
+
+### Audit without editing code
+
+> Use backend-to-ui to audit the current UI, interactions, accessibility and performance. Report prioritized fixes without changing files.
+
+**Important: tech stack selection.** For implementation/redesign, if you neither name a frontend stack nor explicitly authorize reuse of the existing one, the agent **must ask first**. Finding React, Vue or static HTML in the repo alone is not authorization. It must **never silently default to native HTML**. A read-only audit does not require that question. See [stack selection policy](skills/backend-to-ui/references/stack-selection.md).
 
 ## What it does
 
-| Understands | Implements | Verifies |
+| Understand | Build or improve | Verify |
 | --- | --- | --- |
-| Existing stack and conventions | UI suited to the actual users | Real flows, including loading and failure |
-| Routes, API contracts and page props | Data access without invented endpoints | Responsive and accessible behavior |
-| Authorization and business rules | Pagination, cache boundaries, cancellation | Rendering and request performance when tools permit |
-| Existing product identity | Forms and mutations only if the backend supports them | Clear, evidence-based delivery notes |
-| Product mode and primary activity | Domain-specific composition, not interchangeable UI chrome | Full-page screenshot critique and a corrective design pass |
+| Actual users, workflows and product mode | Distinctive, product-specific layouts | Real routes, states and interactions |
+| Existing frontend, components and design tokens | Incremental fixes in the current framework | Desktop/mobile screenshot review |
+| Backend routes, auth, fields when present | No invented API operations or metrics | Error, loading, permission and recovery |
+| Data ownership, navigation and performance | Scoped fetching, pagination, cancellation where needed | Performance evidence when tools are available |
 
-It adapts to REST, GraphQL, RPC/gRPC, Inertia, SSR, server templates, SPA, native, and realtime patterns where supported by the project. **No automatic rewrite to React or any other stack.**
+**Works with existing frontends even if no backend is present.** React, Vue, Angular, Svelte, Next/Nuxt, server templates, WordPress, HTMX, native HTML, Flutter, SwiftUI and other stacks are supported as project-specific engineering workflows—not as a blanket claim that every combination has been benchmarked.
 
-## How it works
-
-**Backend discovery → user-task mapping → two composition options → context-specific art direction → implementation → screenshot critique → repair.**
-
-The skill is designed for a one-shot *request*, not one-shot guesswork. A coding agent must still inspect the repository and run the checks its environment actually supports. It should not invent features, silently bypass authorization, or report measurements it did not take.
-
-See [the workflow and its safeguards](docs/WORKFLOW.md), [visual review gates](skills/backend-to-ui/references/visual-review.md), [contextual examples](skills/backend-to-ui/references/cases.md), [design research and credits](docs/DESIGN_SOURCES.md), and the [source instructions](skills/backend-to-ui/SKILL.md).
-
-## When the generated UI feels generic
-
-A passing build is not the finish line. If the dominant feature is lost in a tiny central widget, if empty space has no purpose, or if UI chrome overwhelms the user task, the skill now treats it as a **visual stop-ship defect**. It asks the agent to inspect real screenshots, change the composition, and re-check desktop and mobile.
-
-For example, an arcade gacha experience should prioritize the playable machine, pull/reveal feedback and collection. It should not look like a generic SaaS dashboard with neon badges. A warehouse picking screen, on the other hand, should prioritize scan speed and a dense actionable queue.
-
-For a redesign, use this one prompt:
-
-> Use backend-to-ui to redesign this interface. Keep the existing backend behavior and tech stack. Diagnose generic layout and visual hierarchy from rendered screenshots, choose a product-specific composition, rebuild, test desktop/mobile and fix the largest visual defects.
-
-See [case-based design reasoning](skills/backend-to-ui/references/cases.md) and [visual stop-ship criteria](skills/backend-to-ui/references/visual-review.md). The skill cannot guarantee aesthetic quality or inspect a screen without access to browser/device tools; limitations must be reported.
-
-## Example
-
-Suppose the repository already exposes a paginated orders endpoint and an authorized update operation. The agent should create a purposeful orders workflow, with server-backed filters, usable detail views and guarded updates—not download every order into the browser and render an arbitrary analytics dashboard. These endpoint examples are **illustrative**, not APIs provided by this skill.
-
-Want to give the agent context without writing a long brief?
-
-> Use backend-to-ui. This is a mobile-first app for warehouse staff. Keep the existing auth, branding, and business logic. Build the primary workflows and test on a narrow screen.
-
-See [practical prompts and troubleshooting](docs/USAGE.md).
-
-## Demo
-
-The cover above links to an MP4 introduction included in this repository. **The video is a motion concept, not a recording of a live API-backed product.**
-
-To display a native inline GitHub video player, upload `media/intro.mp4` through GitHub's Markdown editor and place the actual `github.com/user-attachments/assets/...` URL on its own line. GitHub handles that asset as an embedded player; the linked cover above remains a reliable fallback on other Markdown renderers. [Publishing instructions](docs/PUBLISHING.md#show-the-video-inline-on-github).
+The workflow is **inspect → understand → map → compare two design compositions → implement → test → inspect actual screenshots → fix**. One-shot means one request can trigger the complete process *after* a frontend-stack choice is resolved.
 
 ## Project structure
 
 ```text
 skills/backend-to-ui/
-├── SKILL.md                  # Small entry point loaded by the agent
-└── references/              # Read only when relevant
-    ├── data.md
-    ├── design.md
-    ├── cases.md
-    ├── visual-review.md
-    ├── performance.md
-    ├── stacks.md
-    └── verify.md
-media/                         # Public-facing cover + intro, not used by the skill
-docs/                          # Installation, workflow, release and publishing guides
-tests/                         # Dependency-free structure checks
+  SKILL.md                   # Entry point used by coding agents
+  references/
+    existing-frontend.md     # Modernize without rewriting working apps
+    stack-selection.md       # Required stack-choice gate
+    design.md                # Product-led art direction
+    visual-review.md         # Stop-ship screenshot checks
+    data.md                  # Real API/props/data contracts
+    performance.md           # Request/rendering efficiency
+    stacks.md                # Framework-specific patterns
+    cases.md                 # Decision examples, not templates
+    verify.md                # Functional/release checks
+evals/                       # Behavioral scenarios + evidence scorer
+tests/                       # Repository and evaluator tests
+media/intro.gif              # Animated introduction
 ```
 
-The actual skill is just `skills/backend-to-ui/`. No installer scripts, additional APIs, analytics services or credentials are required to use its instructions.
-
-## Quality and trust
-
-Run the repository checks:
+## Validate and contribute
 
 ```bash
 python3 tests/validate.py
+python3 -m unittest discover -s tests -p 'test_*.py' -v
 ```
 
-CI runs the same structural checks on pull requests. These verify metadata, references, docs and media existence—not the quality of every future frontend. End-to-end UI performance and visual quality must be checked on the **target project**, with its own tests and data.
+These checks validate repository integrity and evaluation rules—not UI quality across coding agents. Real acceptance requires representative source repositories, browser/device screenshots, interaction checks and measured network/render traces. Missing evidence is **inconclusive**, not a pass. See [evaluation protocol](evals/README.md) and [visual gates](skills/backend-to-ui/references/visual-review.md).
 
-- [Security and trust model](SECURITY.md)
-- [Contributing](CONTRIBUTING.md)
-- [Changelog](CHANGELOG.md)
-- [Design research & acknowledgments](docs/DESIGN_SOURCES.md)
-- [Behavioral evaluation and evidence protocol](evals/README.md)
-- [Release process](docs/RELEASE.md)
-- [How to publish on skills.sh](docs/PUBLISHING.md)
+To contribute, open an issue or PR with a clear reproduction and evidence. Read [CONTRIBUTING.md](CONTRIBUTING.md) and [SECURITY.md](SECURITY.md). Releases must update [CHANGELOG.md](CHANGELOG.md), run the commands above, record real evaluation limitations, and tag the merged `main` commit.
 
-## License and acknowledgment
+## Publishing and distribution
 
-MIT © backend-to-ui contributors. Inspired by the open [Agent Skills specification](https://agentskills.io/specification) and design-language documentation practices such as [VoltAgent/awesome-design-md](https://github.com/VoltAgent/awesome-design-md). No third-party design assets, proprietary interfaces or external agent binaries are included.
+The repository is `alifakbxr/product-ui`, but the skill name stays `backend-to-ui`. Install it using the command above. Listing on [skills.sh](https://skills.sh) happens through its discovery/indexing workflow, not a ZIP upload; publishing on GitHub alone does not guarantee immediate visibility.
+
+The introduction GIF was derived from this project's original MP4 demo. It is a **motion concept**, not a live backend integration recording.
+
+## Credits and license
+
+Independent approach informed by [Anthropic Frontend Design](https://skills.sh/anthropics/skills/frontend-design), [Impeccable](https://skills.sh/pbakaus/impeccable/impeccable), [Vercel Web Design Guidelines](https://skills.sh/vercel-labs/agent-skills/web-design-guidelines), [UI/UX Pro Max](https://skills.sh/nextlevelbuilder/ui-ux-pro-max-skill/ui-ux-pro-max), and [VoltAgent awesome-design-md](https://github.com/VoltAgent/awesome-design-md). References are not installed dependencies or endorsements.
+
+MIT · See [LICENSE](LICENSE).

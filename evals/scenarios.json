@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "description": "Host-agnostic one-shot behavioral scenarios. These are specifications, not evidence that any coding agent passed.",
+  "description": "Host-agnostic behavioral expectations for backend-only, frontend-only, and existing full-stack projects. These scenarios are specifications, not evidence that any coding agent passed.",
   "scenarios": [
     {
       "id": "backend_only_unspecified",
@@ -392,6 +392,129 @@
         "gates": [
           "conflict"
         ]
+      }
+    },
+    {
+      "id": "existing_react_frontend_reuse",
+      "category": "existing_frontend",
+      "input": {
+        "project": "React frontend with local state and no backend",
+        "prompt": "Use backend-to-ui to improve this React UI. Keep the existing frontend stack.",
+        "frontend_choice": null,
+        "existing_frontend": "React",
+        "reuse_existing": true,
+        "audit_only": false,
+        "conflict": false
+      },
+      "expected": {
+        "action": "implement",
+        "stack": "React",
+        "gates": [
+          "interaction",
+          "visual"
+        ]
+      }
+    },
+    {
+      "id": "existing_angular_frontend_reuse",
+      "category": "existing_frontend",
+      "input": {
+        "project": "Angular standalone UI with local services",
+        "prompt": "Keep the existing frontend stack and redesign the primary workflow.",
+        "frontend_choice": null,
+        "existing_frontend": "Angular",
+        "reuse_existing": true,
+        "audit_only": false,
+        "conflict": false
+      },
+      "expected": {
+        "action": "implement",
+        "stack": "Angular",
+        "gates": [
+          "interaction",
+          "visual",
+          "performance"
+        ]
+      }
+    },
+    {
+      "id": "existing_svelte_frontend_reuse",
+      "category": "existing_frontend",
+      "input": {
+        "project": "Svelte frontend, no API clients",
+        "prompt": "Use backend-to-ui; preserve the current frontend stack and improve its mobile UX.",
+        "frontend_choice": null,
+        "existing_frontend": "Svelte",
+        "reuse_existing": true,
+        "audit_only": false,
+        "conflict": false
+      },
+      "expected": {
+        "action": "implement",
+        "stack": "Svelte",
+        "gates": [
+          "interaction",
+          "visual"
+        ]
+      }
+    },
+    {
+      "id": "existing_wordpress_frontend_explicit",
+      "category": "existing_frontend",
+      "input": {
+        "project": "WordPress block theme with working templates",
+        "prompt": "Use backend-to-ui with WordPress block theme conventions and improve navigation.",
+        "frontend_choice": "WordPress",
+        "existing_frontend": "WordPress",
+        "reuse_existing": false,
+        "audit_only": false,
+        "conflict": false
+      },
+      "expected": {
+        "action": "implement",
+        "stack": "WordPress",
+        "gates": [
+          "interaction",
+          "visual"
+        ]
+      }
+    },
+    {
+      "id": "existing_react_no_reuse",
+      "category": "stack_selection",
+      "input": {
+        "project": "React frontend already in the repository",
+        "prompt": "Redesign this page with backend-to-ui.",
+        "frontend_choice": null,
+        "existing_frontend": "React",
+        "reuse_existing": false,
+        "audit_only": false,
+        "conflict": false
+      },
+      "expected": {
+        "action": "ask_stack",
+        "stack": null,
+        "gates": [
+          "stack"
+        ]
+      }
+    },
+    {
+      "id": "frontend_only_read_only",
+      "category": "read_only",
+      "input": {
+        "project": "Static frontend with no backend files",
+        "prompt": "Audit this frontend UI for accessibility and slop. Do not make changes.",
+        "frontend_choice": null,
+        "existing_frontend": "native HTML/CSS/JS",
+        "reuse_existing": false,
+        "audit_only": true,
+        "conflict": false
+      },
+      "expected": {
+        "action": "audit",
+        "stack": null,
+        "gates": []
       }
     }
   ]

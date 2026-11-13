@@ -2,11 +2,13 @@
 
 ## Decide the pipeline before components
 
-Map database → query → serializer → transport → client query/cache → derived view state → DOM/native view. Find the bottleneck at its owner, instead of moving work blindly into the browser.
+Map the available pipeline: database → query → serializer → transport → client query/cache → view **when applicable**, or local state → derivation → view for frontend-only work. Find the bottleneck at its owner, instead of moving work blindly into the browser.
 
 **Server:** index hot filters, avoid N+1 with explicit eager loads/batched resolvers, aggregate in SQL when sensible, select needed fields, set stable ordering, serve page/cursor windows, use HTTP caching where safe. Do not paginate an unordered relation or inflate massive nested JSON.
 
 **Network:** deduplicate in-flight same-key reads, cap parallel fetches, avoid waterfalls and background request storms, follow API rate limits, gzip/brotli where available, classify retryable status. Use `AbortController`/equivalent for obsolete requests and an incrementing sequence/token when cancellation is insufficient. Never reuse a private cache entry across authentication scopes.
+
+**Frontend-only:** profile heavy computed selectors, expensive effects/watchers, unnecessary third-party packages, event listener leaks, layout thrashing, long lists and animation jank even when there is no network request.
 
 **Client:** choose one data owner per dataset; maintain normalized, minimal state. Use stable keys and memoization selectively. Derive simple computed view state, not duplicate sources of truth. Debounce text search when it triggers network I/O. Never deeply proxy thousands of records needlessly. Paginate or virtualize long lists, with accessible fallback and correct row identity. Avoid render-time sorting of full datasets, nonessential hydration and large bundles.
 

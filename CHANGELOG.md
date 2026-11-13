@@ -4,6 +4,19 @@ This project follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) in
 
 ## [Unreleased]
 
+### Repository
+- Renamed distribution repository to `product-ui` while keeping the Agent Skill name `backend-to-ui`.
+- Replaced the committed MP4 introduction with an optimized inline README GIF.
+- Consolidated installation, publishing, release and design reference documentation into the root README and existing skill references; removed `docs/`.
+
+### Skill
+- Added explicit support for improving frontend-only and established frontend projects in any framework.
+- Requires preservation of working components, routing, styling conventions and state before redesign.
+- Extended behavioral scenarios for React, Angular, Svelte, WordPress and frontend-only read-only audits.
+- Retained the mandatory stack-choice gate and performance/visual stop-ship rules.
+
+
+
 ### Added
 - Mandatory frontend-stack choice gate: ask when unspecified; no silent native HTML fallback.
 - Portable behavioral evaluation scenarios, evidence format and offline evaluation runner.
