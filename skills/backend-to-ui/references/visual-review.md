@@ -1,59 +1,44 @@
 # Visual review — stop-ship gates
 
-**Do not confuse a passing build with good design.** Review the rendered interface the way a product designer reviews a working prototype, not a CSS linter reviews code. Screenshot inspection is required when render tools are available.
+A passing build or attractive code is **not** evidence of a good interface. Review real desktop/mobile renders and changed interactions. If `UI_CONTRACT.json` exists, use its approved/observed direction; otherwise inspect the actual project brand. Never replace it with the current agent's taste.
 
-## Contract-aware review
+## Product specificity check
 
-If `UI_CONTRACT.json` exists, read it before evaluating the screenshot; otherwise inspect actual brand tokens and existing product UI. Evaluate **the task-specific direction**, not the current model's taste. If an existing brand is approved, preserve it; if provisional, distinguish observations from creative choices. No lint script can certify that a UI is visually excellent. Use [live-browser.md](live-browser.md) for real interaction and DevTools evidence.
+For the redesigned primary screen, provide at least three **source-backed, product-specific choices**:
+1. Its defining authentic object/content (e.g. the collectible card, document canvas or packing slip).
+2. Proportions, hierarchy or layout clearly motivated by real users/tasks.
+3. A meaningful product-specific interaction or state, not a decorative animation.
 
-## Product specificity check (before approval)
+Use real files, user instructions or observed interactions as evidence. Do not invent facts to satisfy a checklist. **Identity swap test:** if replacing the logo and text makes it work for an unrelated SaaS, the composition remains generic. Fix structure first, not border radii or colors.
 
-**Generic polish is not a design direction.** For every redesigned primary screen, identify at least three *verifiable product-specific choices*: (a) dominant authentic object/content, (b) proportions/layout driven by a real task or domain artifact, and (c) functional interaction/state that makes the experience meaningfully different from a generic SaaS template. Cite source files, a user instruction, or observed app behavior; do not invent evidence just to reach three.
+For 3D cards, inspect actual artwork/text clarity, physical card proportion, dominant on-screen size, tilt/flip behavior, focus/keyboard/touch and reduced-motion. A screenshot alone **cannot** establish animation fidelity.
 
-- Compare the design with an unrelated product after swapping the logo and text. If the same hero/cards/charts still work, reconsider the structure.
-- Verify the actual dominant object is large enough to examine/use at desktop and mobile sizes; decorative spacing, filler gradients, badges and navigation must not bury it.
-- Inspect **real screenshots** and the relevant live pointer/keyboard/touch behavior; a static mockup, CSS lint or passing unit test cannot establish a 3D feel, layout correctness or genuine interaction.
-- If the user requests a branded card/item, check authentic proportions, content boundaries and readable details. Fake placeholder content must be explicitly marked.
-- Decide whether an animation explains the interaction. Prefer existing CSS or runtime capabilities before introducing GPU libraries; use reduced-motion behavior and check low-end device rendering.
+## Screenshot loop
 
-**Visual readiness fails** if any major issue remains in product identity, content authenticity, task hierarchy, viewport usage or primary interaction. State exactly what was inspected and what remains unverified.
-
-## Review sequence
-
-1. Capture the **first meaningful screen** at a representative desktop viewport, a narrow phone, and one intermediate width when possible. Use real or clearly identified representative data; record viewport sizes.
-2. Inspect the complete page and the **interaction close-up**: primary control, empty/loading state, confirmation/result, navigation and any overlay. Test the actual user journey, not just the static landing.
-3. Name the **three highest-impact defects**, in priority order, and distinguish visual issues from functionality or backend issues. Use evidence: location on screen, current behavior, why it conflicts with the product's task.
-4. Fix the root cause in composition, hierarchy, copy, real assets or interaction. Do not mask an undersized core feature with shadows, gradients or animations.
-5. Re-capture the relevant viewport(s) and compare before/after. Repeat until no serious stop-ship defect remains or disclose the limitation.
+1. Capture the **first meaningful screen** at representative desktop, phone and intermediate width where practical; use real or labeled fixture data.
+2. Test the actual main route and interaction in a browser (see [live-browser.md](live-browser.md)). Inspect a result, an empty/error state if applicable, and overlays—not only the first frame.
+3. Name the three most consequential issues, with location, expected behavior and proof. Separate UI defects from API/backend failures.
+4. Correct the underlying hierarchy, proportions, content, state or interaction. Re-render only affected views and retest.
+5. Report what was genuinely verified and what remains unverified.
 
 ## Five stop-ship gates
 
-All gates must be checked, not scored by taste alone:
+| Gate | Fails when |
+| --- | --- |
+| **Product fit** | Interface is interchangeable with unrelated products; content or tone is fabricated |
+| **Viewport composition** | Primary task/object is undersized or stranded behind navigation, whitespace and decoration |
+| **Hierarchy / density** | Everything looks equal; cards, pills and metrics drown the main user action |
+| **Material / motion** | Fake imagery/data, generic copy, random neon, unjustified effects or janky animation |
+| **Usability / states** | Inaccessible contrast/focus, broken buttons, overflow, missing error/recovery or mobile input |
 
-| Gate | Fails when | Correction |
-| --- | --- | --- |
-| **Product fit** | UI looks interchangeable with an unrelated product; tone contradicts audience | Revisit user job and mode; select specific subject matter, language and affordance |
-| **Viewport composition** | Main content is undersized/stranded, excessive unused area, important activity below fold without reason | Reallocate width/height to the primary task; adapt layout rather than just center a fixed-width card |
-| **Hierarchy and density** | Badge rows, nav chrome or decoration compete with the main action; everything looks equally important | Remove/relegate noise; use type, scale, grouping and whitespace to make priorities unambiguous |
-| **Material and motion** | Fake data/art, inconsistent iconography, generic marketing copy, motion unrelated to feedback | Use appropriate authentic assets; make feedback causal and restrained; respect reduced motion |
-| **Usability and states** | Unreadable copy, invisible focus, broken interactions, overlap/overflow, vague loading or error response | Fix accessible structure and real states, then test desktop/mobile behavior |
+**Stop-ship:** serious product-fit, composition or usability defects block visual-readiness claims. A missing browser tool means **unverified**, not passed.
 
-A serious failure in product fit, composition or usability **blocks a claim of visual readiness**. Minor polish debt can be disclosed. Never claim a pass without a captured render.
+## No blanket aesthetic blacklist
 
-## Anti-slop is not a color blacklist
+Cards, gradients, colors and expressive motion can be right when brand and task justify them. Reject **unmotivated defaults**: fake KPI strips, huge slogans above tiny tools, repeated identical rounded cards, decorative orbs, placeholder art, inconsistent fonts and developer-centric copy.
 
-Gradients, vivid palettes, dark themes, cards and playful micro-interactions can be right for the product. The failure is when they are **unmotivated defaults**. Seek coherent visual logic rather than mechanically banning styles or replacing every interface with white editorial minimalism.
+When a user reports "generic", "slop" or "ugly", investigate **task, scale, hierarchy, identity, assets and behavior**. Don't treat it as a request for another color theme. Preserve working integrations, fix the product-specific direction, and inspect updated renders.
 
-Common tells: huge empty hero, centered phone-sized app on desktop, fake KPI strip, repeated rounded cards, decorative orbs, arbitrary neon, random icon badges, tiny low-contrast labels, overloaded sidebars, data-dump tables for browsing, microcopy that sounds like an API specification, and generic congratulations screens with no product-specific outcome.
+## Delivery
 
-## Feedback-driven correction
-
-When the user says "generic", "AI slop", "ugly", or provides a screenshot:
-- Treat it as a **failed quality gate**, not an invitation for superficial recoloring.
-- Read the screenshot and describe concrete mismatches: task, scale, spacing, hierarchy, material, motion and copy.
-- Preserve backend operations and functional behavior. Make a substantive composition change. Show the revised rendered UI when tools allow.
-- Never claim an unseen screenshot was inspected; if no browser/device is accessible, say visual verification is pending and provide reproducible steps.
-
-## Delivery evidence
-
-Report: target users/mode, chosen direction, viewport screenshots actually inspected, significant before/after change, real interaction tested, accessibility/performance checks performed and what remains unverified. Keep the summary concise and factual.
+Briefly state the chosen product direction and why, viewport sizes/screenshots actually inspected, interactions tested, substantive correction, accessibility/performance evidence and unverified gaps. Never claim to have seen a screenshot, used DevTools or measured speed without actually doing so.
