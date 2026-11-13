@@ -24,7 +24,7 @@ class LeanWorkflowPolicyTests(unittest.TestCase):
         self.assertIn("increase total tokens", policy)
         self.assertIn("if declined", skill)
         self.assertIn("single-agent", policy)
-        self.assertIn("one coordinator", policy)
+        self.assertIn("main agent integrates and owns qa", policy)
         self.assertIn("at least", policy)
 
     def test_live_browser_qa_has_real_execution_contract(self):
