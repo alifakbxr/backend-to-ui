@@ -97,12 +97,9 @@ def main() -> None:
         check(path.is_file(), f"Required documentation or CI file missing: {rel}")
         check(path.stat().st_size > 100, f"Suspiciously empty repository file: {rel}")
 
-    gif = ROOT / "media/intro.gif"
-    check(gif.is_file() and gif.read_bytes()[:6] in (b"GIF89a", b"GIF87a"),
-          "Introduction must be a valid GIF")
-    check(gif.stat().st_size < 3_000_000, "Keep committed introduction GIF under 3 MB")
-    check(not (ROOT / "docs").exists(), "The docs/ folder should be removed after consolidation")
-    check(not (ROOT / "media/intro.mp4").exists(), "Replace the MP4 with a GIF")
+    # The skill is instruction-only: promotional videos/GIFs are not required.
+    check(not (ROOT / "media").exists(), "No promotional media should be committed")
+    check(not (ROOT / "docs").exists(), "The docs/ folder should stay consolidated")
 
     markdown_files = [ROOT / "README.md", ROOT / "SECURITY.md", ROOT / "CONTRIBUTING.md",
                       ROOT / "evals/README.md", skill_file, *refs]
@@ -118,12 +115,10 @@ def main() -> None:
           "Missing stack/implementation/audit scenario classes")
 
     readme = (ROOT / "README.md").read_text(encoding="utf-8")
-    check("![product-ui — introduction](media/intro.gif)" in readme, "README must display the GIF")
     check("--skill backend-to-ui" in readme, "README must specify the skill name")
-    check("not a live backend integration recording" in readme, "Demo provenance must be explicit")
     check("private" in (ROOT / "SECURITY.md").read_text().lower(), "Security reporting guidance missing")
 
-    print(f"PASS: Agent Skill metadata, {len(refs)} references, {len(REQUIRED_DOCS)} docs/config files, {link_count} local links, intro GIF")
+    print(f"PASS: Agent Skill metadata, {len(refs)} references, {len(REQUIRED_DOCS)} docs/config files, {link_count} local links, no promotional media")
 
 
 if __name__ == "__main__":

@@ -2,8 +2,6 @@
 
 **Build the interface your product actually needs.**
 
-![product-ui — introduction](media/intro.gif)
-
 **Repository:** `product-ui` · **Agent skill:** `backend-to-ui`
 
 An open, stack-neutral [Agent Skill](https://agentskills.io/specification) to **build, redesign, audit or improve an existing frontend**, or turn a real backend into a useful interface. It understands the product, respects the current framework, maps real data and interactions, and asks for visual/functional QA—not another interchangeable AI dashboard.
@@ -78,7 +76,6 @@ skills/backend-to-ui/
     verify.md                # Functional/release checks
 evals/                       # Behavioral scenarios + evidence scorer
 tests/                       # Repository and evaluator tests
-media/intro.gif              # Animated introduction
 ```
 
 ## Validate and contribute
@@ -95,8 +92,6 @@ To contribute, open an issue or PR with a clear reproduction and evidence. Read 
 ## Publishing and distribution
 
 The repository is `alifakbxr/product-ui`, but the skill name stays `backend-to-ui`. Install it using the command above. Listing on [skills.sh](https://skills.sh) happens through its discovery/indexing workflow, not a ZIP upload; publishing on GitHub alone does not guarantee immediate visibility.
-
-The introduction GIF was derived from this project's original MP4 demo. It is a **motion concept**, not a live backend integration recording.
 
 ## Credits and license
 

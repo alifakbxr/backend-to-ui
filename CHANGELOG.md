@@ -4,9 +4,11 @@ This project follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) in
 
 ## [Unreleased]
 
+### Removed
+- Removed the introductory GIF and promotional media references; the repository now focuses on the Agent Skill and its documentation.
+
 ### Repository
 - Renamed distribution repository to `product-ui` while keeping the Agent Skill name `backend-to-ui`.
-- Replaced the committed MP4 introduction with an optimized inline README GIF.
 - Consolidated installation, publishing, release and design reference documentation into the root README and existing skill references; removed `docs/`.
 
 ### Skill
@@ -40,8 +42,8 @@ This project follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) in
 
 
 ### Documentation
-- Added public README with clickable demo cover.
-- Documented GitHub publication, skills.sh discovery, inline video attachment process and agent installations.
+- Added the public README with installation and usage guidance.
+- Documented GitHub publication, skills.sh discovery and agent installations.
 - Added workflow, contribution and security documentation.
 - Added automated repository validation in CI.
 
@@ -49,4 +51,3 @@ This project follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) in
 
 - Initial `backend-to-ui` instruction-only Agent Skill.
 - Backend contract discovery, context-first design, efficient data pipeline and verification guides.
-- Introductory motion concept and cover asset.
