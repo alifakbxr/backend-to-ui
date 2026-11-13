@@ -102,7 +102,13 @@ def main() -> None:
           "Introduction must be a valid GIF")
     check(gif.stat().st_size < 3_000_000, "Keep committed introduction GIF under 3 MB")
     check(not (ROOT / "docs").exists(), "The docs/ folder should be removed after consolidation")
-    check(not (ROOT / "media/intro.mp4").exists(), "Replace the MP4 with a GIF")
+    movie = ROOT / "media/intro.mp4"
+    check(movie.is_file() and b"ftyp" in movie.read_bytes()[:32], "Video must be an MP4")
+    check(movie.stat().st_size < 5_000_000, "Keep the MP4 under 5 MB")
+    cover = ROOT / "media/cover.png"
+    check(cover.is_file() and cover.read_bytes()[:8] == bytes.fromhex("89504e470d0a1a0a"),
+          "Cover must be a valid PNG")
+    check((ROOT / "scripts/render_intro.py").is_file(), "Missing motion source generator")
 
     markdown_files = [ROOT / "README.md", ROOT / "SECURITY.md", ROOT / "CONTRIBUTING.md",
                       ROOT / "evals/README.md", skill_file, *refs]
@@ -119,11 +125,12 @@ def main() -> None:
 
     readme = (ROOT / "README.md").read_text(encoding="utf-8")
     check("![product-ui — introduction](media/intro.gif)" in readme, "README must display the GIF")
+    check("[Watch the 30 FPS introduction with audio](media/intro.mp4)" in readme, "README must link the full video")
     check("--skill backend-to-ui" in readme, "README must specify the skill name")
     check("not a live backend integration recording" in readme, "Demo provenance must be explicit")
     check("private" in (ROOT / "SECURITY.md").read_text().lower(), "Security reporting guidance missing")
 
-    print(f"PASS: Agent Skill metadata, {len(refs)} references, {len(REQUIRED_DOCS)} docs/config files, {link_count} local links, intro GIF")
+    print(f"PASS: Agent Skill metadata, {len(refs)} references, {len(REQUIRED_DOCS)} docs/config files, {link_count} local links, intro GIF and MP4")
 
 
 if __name__ == "__main__":

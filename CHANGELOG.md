@@ -4,6 +4,12 @@ This project follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) in
 
 ## [Unreleased]
 
+### Media
+- Replaced the previous 6 FPS / 640 × 360 GIF with a new 15 FPS / 800 × 450 / 17-second looping introduction.
+- Created an original 30 FPS / 1280 × 720 H.264 video with understated original AAC audio.
+- Added a reproducible Pillow+ffmpeg motion source and a cover frame.
+- Updated README with inline GIF and downloadable video; the video shows an illustrative existing-frontend upgrade, not a real API-backed demo.
+
 ### Repository
 - Renamed distribution repository to `product-ui` while keeping the Agent Skill name `backend-to-ui`.
 - Replaced the committed MP4 introduction with an optimized inline README GIF.

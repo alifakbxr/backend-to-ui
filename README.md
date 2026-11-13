@@ -4,6 +4,10 @@
 
 ![product-ui — introduction](media/intro.gif)
 
+[Watch the 30 FPS introduction with audio](media/intro.mp4) · [View the cover](media/cover.png)
+
+*17 seconds · 1280 × 720 H.264/AAC video · 800 × 450 / 15 FPS looping GIF.*
+
 **Repository:** `product-ui` · **Agent skill:** `backend-to-ui`
 
 An open, stack-neutral [Agent Skill](https://agentskills.io/specification) to **build, redesign, audit or improve an existing frontend**, or turn a real backend into a useful interface. It understands the product, respects the current framework, maps real data and interactions, and asks for visual/functional QA—not another interchangeable AI dashboard.
@@ -78,7 +82,10 @@ skills/backend-to-ui/
     verify.md                # Functional/release checks
 evals/                       # Behavioral scenarios + evidence scorer
 tests/                       # Repository and evaluator tests
-media/intro.gif              # Animated introduction
+media/intro.gif              # Smooth 15 FPS introduction (README)
+media/intro.mp4              # 30 FPS H.264/AAC video with original audio
+media/cover.png              # Poster frame
+scripts/render_intro.py      # Reproducible source animation
 ```
 
 ## Validate and contribute
@@ -96,7 +103,18 @@ To contribute, open an issue or PR with a clear reproduction and evidence. Read 
 
 The repository is `alifakbxr/product-ui`, but the skill name stays `backend-to-ui`. Install it using the command above. Listing on [skills.sh](https://skills.sh) happens through its discovery/indexing workflow, not a ZIP upload; publishing on GitHub alone does not guarantee immediate visibility.
 
-The introduction GIF was derived from this project's original MP4 demo. It is a **motion concept**, not a live backend integration recording.
+The video and GIF are newly designed and encoded from the **same deterministic source animation**. The previous 6 FPS GIF was replaced with a 15 FPS loop and the video plays at 30 FPS with original, understated sound design. The before/after workspace is an **illustrative motion concept**, not a claim of live backend integration.
+
+To regenerate locally, install Python Pillow and ffmpeg, then run:
+
+```bash
+python3 scripts/render_intro.py --out media
+ffmpeg -hide_banner -loglevel error -y -i media/intro.mp4 \
+  -filter_complex "fps=15,scale=800:-1:flags=lanczos,split[s0][s1];[s0]palettegen=max_colors=96:stats_mode=diff[p];[s1][p]paletteuse=dither=bayer:bayer_scale=4:diff_mode=rectangle" \
+  -loop 0 media/intro.gif
+```
+
+Build dependencies are **only** for the promotional assets; the Agent Skill itself does not require Pillow or ffmpeg.
 
 ## Credits and license
 
