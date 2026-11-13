@@ -1,0 +1,51 @@
+name: video-demo proof of capture
+
+on:
+  push:
+    branches: [feat/new-smooth-intro-video-gif]
+    paths:
+      - '.github/video-demo/**'
+      - '.github/workflows/video-demo.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22.20.0'
+      - name: Fetch pinned nilbuild/video-demo
+        env:
+          ENGINE_SHA: 767bfb818880c9f38bb02873d3d67141a3e62250
+        run: |
+          git clone -q https://github.com/nilbuild/video-demo.git "$RUNNER_TEMP/video-demo"
+          git -C "$RUNNER_TEMP/video-demo" checkout --detach "$ENGINE_SHA"
+      - name: Doctor and install browser studio in ephemeral runner
+        run: |
+          "$RUNNER_TEMP/video-demo/scripts/doctor.sh" || true
+          "$RUNNER_TEMP/video-demo/scripts/install.sh"
+      - name: Scaffold public-site workspace
+        run: |
+          node "$RUNNER_TEMP/video-demo/scripts/scaffold.mjs" --site https://github.com/alifakbxr/product-ui --project "$RUNNER_TEMP/product-ui-video-demo"
+          cp .github/video-demo/demo.config.ts "$RUNNER_TEMP/product-ui-video-demo/demo.config.ts"
+          cp .github/video-demo/scenes/smoke.scene.ts "$RUNNER_TEMP/product-ui-video-demo/scenes/smoke.scene.ts"
+      - name: Film smoke scene (no voice in proof run)
+        env:
+          DEMO_VOICE: '0'
+          DEMO_TOUR: '0'
+          DEMO_TRACE_FRAMES: '1'
+        run: |
+          "$RUNNER_TEMP/video-demo/scripts/demo" --project "$RUNNER_TEMP/product-ui-video-demo" --grep smoke
+      - name: Upload proof and retina stills
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: video-demo-smoke
+          path: ${{ runner.temp }}/product-ui-video-demo/demo-out/
+          retention-days: 7
