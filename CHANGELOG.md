@@ -4,6 +4,14 @@ This project follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) in
 
 ## [Unreleased]
 
+### v1.4.0 — portable design authority
+- Introduce a versioned project `UI_CONTRACT.json` with a contract policy, example, and validation script; model/host aesthetic defaults carry no authority.
+- Require explicit provenance for design decisions and reject inference-backed `approved` contracts.
+- Add Antigravity/Gemini/Codex on-disk diagnostic with duplicate/stale copy detection and honest activation limitations.
+- Extend tests and CI with contract provenance and host-discovery regression checks.
+- Preserve existing-frontend workflows, mandatory stack selection, and zero promotional videos/GIFs.
+
+
 ### Removed
 - Removed the introductory GIF and promotional media references; the repository now focuses on the Agent Skill and its documentation.
 

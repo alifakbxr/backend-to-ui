@@ -2,6 +2,10 @@
 
 **This skill is not only for backend-only repositories.** Use it on frontend-only projects, production web/mobile frontends, and full-stack applications with established interfaces. Do not treat the absence of a backend as a blocker for redesign, UX, accessibility or interaction work.
 
+## Preserve design decisions across agents
+
+Read the project's `UI_CONTRACT.json` before editing an existing frontend; see [design-contract.md](design-contract.md). If absent, first inspect real brand assets, tokens and UI screens; create a **provisional** contract using observed sources. Treat existing layout as evidence (not necessarily the desired final identity). The agent's own styling preferences cannot override user-approved brand decisions.
+
 ## Discover the existing implementation
 
 Read the relevant parts of the project instead of guessing:

@@ -18,3 +18,23 @@ jobs:
         run: python3 tests/validate.py
       - name: Test behavioral evaluation rules and scenarios
         run: python3 -m unittest discover -s tests -p 'test_*.py' -v
+
+  host-install:
+    name: Check ${{ matrix.host }} installation path
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        host: [antigravity, gemini-cli]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install branch skill with official CLI into isolated runner
+        run: npx --yes skills add . --skill backend-to-ui --agent ${{ matrix.host }} -g -y
+      - name: Check host-specific on-disk discovery
+        run: python3 skills/backend-to-ui/scripts/doctor.py --host ${{ matrix.host }} --source skills/backend-to-ui/SKILL.md --strict --json
+      - name: Record limitations
+        run: echo 'PASS here means installed on disk; Antigravity/Gemini activation was not executed.'

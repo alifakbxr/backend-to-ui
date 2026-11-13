@@ -2,6 +2,12 @@
 
 This is a **portable evaluation protocol** for `backend-to-ui`. It defines expected agent behavior, a machine-checkable record shape, and manual verification requirements. **No Claude Code, Gemini CLI, Antigravity, or Codex runs are bundled or claimed.** CI tests the harness and scenario consistency, not model compliance.
 
+## Cross-agent comparison protocol
+
+For any claim of consistent design across ChatGPT, Antigravity, Gemini CLI, Codex or Claude Code, use the **same** fixture repository SHA, the **same approved or provisional `UI_CONTRACT.json` SHA**, the same prompt, viewport data and QA criteria. Record host name/version, actual discovery path, confirmed activation (not merely installation), screenshot evidence, diffs, and behavior tests. A missing host run is **not_run**, not `pass`.
+
+The repo includes deterministic contract and on-disk discovery unit tests, **not** a benchmark showing all commercial agents produced identical interfaces. Run actual agents and review artifacts before making performance or taste claims.
+
 ## What is covered
 
 [scenarios.json](scenarios.json) contains 19 cases: missing stack, explicit stack, existing stack without authorization, explicitly authorized reuse, conflicts, read-only audits, backend integration, visual critique, and large-data/performance risks. The **mandatory stack choice** takes precedence over one-shot generation. A detected stack is not consent; native HTML is allowed only when chosen explicitly.

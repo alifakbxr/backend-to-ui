@@ -3,7 +3,7 @@ name: backend-to-ui
 description: Build, redesign and improve existing frontends in any framework or build UI from real backends, APIs and page props. Use for frontend-only apps, established projects, backend-to-frontend integration, visual UX audits, data-heavy screens and one-shot implementation. Preserve architecture, brand and behavior; verify real user flows, accessibility and rendering performance.
 license: MIT
 metadata:
-  version: "1.3.0"
+  version: "1.4.0"
 ---
 
 # Backend to UI
@@ -13,6 +13,14 @@ Build **product-specific interfaces** for existing frontend apps or backend-only
 ## How to work
 
 One request should run end-to-end when the repository and tools permit, **after the required frontend stack is selected**. Do not stop at a plan or mockup. Keep the existing stack, auth and brand. Ask only about true blockers or high-risk changes **except the mandatory frontend stack decision below**; label reasonable product assumptions instead of inventing facts.
+
+## Host-neutral design authority and activation
+
+The skill name is `backend-to-ui` in every host. When explicitly invoked, **read this SKILL.md and the required references**, not the host's preferred UI examples. Do not claim the skill was used unless its instructions were actually loaded. For activation diagnostics follow [host compatibility](references/host-compatibility.md); file installation is not proof of host activation.
+
+Before any UI code edit, read [design-contract.md](references/design-contract.md). Use **the project's** `UI_CONTRACT.json` if present; validate it with `python3 <skill-dir>/scripts/check_contract.py --contract UI_CONTRACT.json` when Python exists. Order of authority: current explicit user request → reviewed project design contract → observed existing brand/components/design tokens → project/product evidence → documented task-specific conventions. **The model's or agent host's own aesthetic preferences have zero design authority.**
+
+On a first run with no contract, inspect the project and record the direction in `UI_CONTRACT.json` (template: [UI_CONTRACT.example.json](assets/UI_CONTRACT.example.json)) **after stack approval**. Mark decisions that lack user/brand support as `provisional`, with evidence and assumptions. Do not fabricate brand tokens, invent approvals or silently replace existing product identity. Reuse a previously approved contract without re-designing it on every invocation. When explicit feedback changes direction, update and validate the contract deliberately, rather than layering new preferences on top.
 
 ## Mandatory frontend stack gate (before editing UI files)
 
@@ -30,13 +38,20 @@ If implementation or redesign is requested, read [stack decision policy](referen
 2. **Understand.** Identify the real user, job, device, environment, emotional expectation and **product mode**: operate, explore, play, create, read or persuade. Separate observed facts from assumptions. Do not infer the information architecture from database table names. Read [design direction](references/design.md).
 3. **Map.** Document the user flow and what must **remain working** (navigation, component contracts, state, tests and current data flows). If a backend is available, map actions to authorized handlers, fields, states and recovery. In frontend-only apps, use actual local state, fixtures and documented integrations; do **not** fabricate an API. Preserve SSR, native, Inertia, GraphQL and other patterns already used.
 4. **Plan for speed.** Trace the **real pipeline**: backend query → transport → client state → render when applicable, or local state → derived state → render for standalone frontends. Preserve efficient existing patterns; apply pagination, cache scope, request deduplication, cancellation/race safety and bounded rendering when relevant. Read [performance](references/performance.md).
-5. **Art direct.** Before writing layout code, briefly consider **two materially different compositions** appropriate to the product; select one and state the rationale in the work. Define the dominant subject or task, visual hierarchy, density, typography, color roles, assets and motion. Be specific to the domain, not a default dashboard skin. See [product examples](references/cases.md). Never use large blank desktop margins to hide a phone-sized UI unless that presentation is explicitly the product.
+5. **Art direct.** Consult the reviewed `UI_CONTRACT.json`. If a composition is already approved and the user has not requested a rebrand, **reuse it without inventing alternatives**. Otherwise compare **two materially different compositions** for the product, select the task-appropriate one, and record the rationale, status, source and preservation scope in `UI_CONTRACT.json`. Define the dominant subject or task, visual hierarchy, density, typography, color roles, assets and motion. Be specific to the domain, not a default dashboard skin. See [product examples](references/cases.md). Never use large blank desktop margins to hide a phone-sized UI unless that presentation is explicitly the product.
 6. **Build.** For an existing frontend, improve it **incrementally in its own framework**: reuse component APIs, routing, styling conventions, state libraries and accessible patterns. Avoid unnecessary replatforming, new dependencies, design-system replacement or regression of unrelated flows. For backend-only projects, implement the explicitly chosen stack. Complete the main user flow and its real states. Give the primary interaction an appropriate share of screen space and visual prominence. Make controls legible and functional; provide loading, empty, error, retry, validation, permission and mutation states where relevant. Do not add decorative complexity in place of useful content.
-7. **Test, critique, fix.** Run available tests and inspect **actual rendered desktop and mobile screenshots** (plus an intermediate width when possible). Apply [visual review gates](references/visual-review.md) and [functional verification](references/verify.md). If a serious gate fails, **change the design and review again**; do not stop at a CSS tweak or report success based only on a passing build. Test real data timing and request races. If render tools are unavailable, report visual QA as unverified rather than asserting it passed.
-8. **Deliver.** Describe what the user can do, real contracts used, the chosen design rationale, notable visual correction(s), performance controls, tests actually run and outstanding risks. Documentation proportional to the project; no required paperwork for its own sake.
+7. **Test, critique, fix.** Validate `UI_CONTRACT.json`, run available tests and inspect **actual rendered desktop and mobile screenshots** (plus an intermediate width when possible). Apply [visual review gates](references/visual-review.md) and [functional verification](references/verify.md). If a serious gate fails, **change the design and review again**; do not stop at a CSS tweak or report success based only on a passing build. Test real data timing and request races. If render tools are unavailable, report visual QA as unverified rather than asserting it passed.
+8. **Deliver.** Describe what the user can do, real contracts used, the design contract status/source, notable visual correction(s), performance controls, tests actually run and outstanding risks. Include the skill version and which checks actually ran; don't claim host activation, screenshot inspection or cross-agent consistency without evidence. Documentation proportional to the project; no required paperwork for its own sake.
+
+## Portable output contract
+
+Before edits: report `work_mode`, `frontend_stack`, `contract_status`, `primary_user`, `primary_task`, `preserve`, and `selected_composition` (with its observed source or explicit provisional assumption). No long document is required when these fit a short note.
+
+After edits: report `changed_files`, `preserved_flows`, `functional_tests`, `visual_evidence`, `performance_evidence`, `unverified` and `skill_version`. A build passing does not satisfy visual QA.
 
 ## Hard gates
 
+- **Design authority truth:** approved project decisions outrank the agent's taste; missing sources are provisional, not invented facts; never re-skin an approved design without user authorization.
 - **Stack truth:** explicit choice or explicit reuse authorization is required before frontend implementation; detected stack alone is not permission. Never default to native HTML.
 - **Existing frontend truth:** do not silently replace existing frameworks, routes, component contracts, state management, design system, localization, theming or working flows. Preserve and verify regressions.
 - **Backend truth:** when a backend exists, do not fabricate data, actions or permission checks. When it does not, do not invent a backend or require one to improve UI.
@@ -48,6 +63,8 @@ If implementation or redesign is requested, read [stack decision policy](referen
 
 ## References (read when needed)
 
+- [design-contract.md](references/design-contract.md) — project identity, provenance, review and lock semantics
+- [host-compatibility.md](references/host-compatibility.md) — Antigravity/Gemini installation and activation checks
 - [stack-selection.md](references/stack-selection.md) — mandatory stack choice and one-shot behavior
 - [existing-frontend.md](references/existing-frontend.md) — safe modernization of any existing frontend
 - [data.md](references/data.md) — real contracts, permissions, state handling
@@ -57,6 +74,10 @@ If implementation or redesign is requested, read [stack decision policy](referen
 - [visual-review.md](references/visual-review.md) — stop-ship visual gates and screenshot iteration
 - [stacks.md](references/stacks.md) — stack-specific integration choices
 - [verify.md](references/verify.md) — functional and evidence-based acceptance tests
+
+## Portable validation
+
+From a clone of this skill repository, run `python3 scripts/doctor.py --host all` for **on-disk host discovery**, then confirm skill activation inside each host UI separately. The doctor never claims activation. On a user project run `python3 <skill-dir>/scripts/check_contract.py --contract <project>/UI_CONTRACT.json`. If Python is unavailable, manually follow the same documented checks and report that automation was unavailable.
 
 ## Example trigger
 

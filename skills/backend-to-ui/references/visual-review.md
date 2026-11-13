@@ -2,6 +2,10 @@
 
 **Do not confuse a passing build with good design.** Review the rendered interface the way a product designer reviews a working prototype, not a CSS linter reviews code. Screenshot inspection is required when render tools are available.
 
+## Contract-aware review
+
+Before judging a screenshot, read the project's `UI_CONTRACT.json`. Evaluate **the product-specific direction that was recorded**, not the taste of the current model. If an existing brand is user-approved, preserve it; if the design is provisional, distinguish observations from creative choices. No lint script can certify that a UI is visually excellent.
+
 ## Review sequence
 
 1. Capture the **first meaningful screen** at a representative desktop viewport, a narrow phone, and one intermediate width when possible. Use real or clearly identified representative data; record viewport sizes.
