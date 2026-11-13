@@ -6,6 +6,18 @@
 
 If `UI_CONTRACT.json` exists, read it before evaluating the screenshot; otherwise inspect actual brand tokens and existing product UI. Evaluate **the task-specific direction**, not the current model's taste. If an existing brand is approved, preserve it; if provisional, distinguish observations from creative choices. No lint script can certify that a UI is visually excellent. Use [live-browser.md](live-browser.md) for real interaction and DevTools evidence.
 
+## Product specificity check (before approval)
+
+**Generic polish is not a design direction.** For every redesigned primary screen, identify at least three *verifiable product-specific choices*: (a) dominant authentic object/content, (b) proportions/layout driven by a real task or domain artifact, and (c) functional interaction/state that makes the experience meaningfully different from a generic SaaS template. Cite source files, a user instruction, or observed app behavior; do not invent evidence just to reach three.
+
+- Compare the design with an unrelated product after swapping the logo and text. If the same hero/cards/charts still work, reconsider the structure.
+- Verify the actual dominant object is large enough to examine/use at desktop and mobile sizes; decorative spacing, filler gradients, badges and navigation must not bury it.
+- Inspect **real screenshots** and the relevant live pointer/keyboard/touch behavior; a static mockup, CSS lint or passing unit test cannot establish a 3D feel, layout correctness or genuine interaction.
+- If the user requests a branded card/item, check authentic proportions, content boundaries and readable details. Fake placeholder content must be explicitly marked.
+- Decide whether an animation explains the interaction. Prefer existing CSS or runtime capabilities before introducing GPU libraries; use reduced-motion behavior and check low-end device rendering.
+
+**Visual readiness fails** if any major issue remains in product identity, content authenticity, task hierarchy, viewport usage or primary interaction. State exactly what was inspected and what remains unverified.
+
 ## Review sequence
 
 1. Capture the **first meaningful screen** at a representative desktop viewport, a narrow phone, and one intermediate width when possible. Use real or clearly identified representative data; record viewport sizes.

@@ -19,6 +19,20 @@ These are decision examples, **not code or aesthetics to clone**. Adapt the prin
 
 **Do not** convert every game into this exact cabinet composition. A collection-first inventory app may require a completely different dominant surface.
 
+## Explore / Play: 3D trading card viewer (Pokémon TCG)
+
+**Actual goal determines design:** showcase one collectible card's artwork and physicality, inspect details, flip/tilt it and understand context. This is not a SaaS dashboard and does not call for a KPI strip, card-grid marketing hero or made-up rarity statistics.
+
+**Specific decisions to evaluate:**
+- Give the card object the main viewport, using realistic card aspect ratio (about 2.5:3.5 for a physical trading card) and preserved readable artwork/text where legitimate assets are provided.
+- Tie tilt/flip/glare to pointer, touch or keyboard interaction; avoid decorative infinite spin. Offer reduced-motion controls and a clear neutral pose.
+- If the user provides card imagery or a dataset, use it accurately with provenance. Never generate fake card facts and present them as official.
+- Prefer `perspective`/`transform`/CSS variables for card surface effects; use a WebGL library only for truly 3D meshes, shaders or scene requirements. Don't install Next.js + Three.js + Framer Motion by reflex.
+- Compare a card-focused inspection composition with a collection-led composition **only when a new visual direction is requested**. The user task determines which wins.
+- Check real desktop/mobile rendered screenshot, actual interaction (pointer/touch), texture quality, loading, keyboard focus and GPU overhead.
+
+**Anti-slop failure:** a tiny tilted card floating beside fake metrics, an enormous headline, random gradient blobs, and buttons that do nothing.
+
 ## Operate: warehouse picking
 
 **User goal:** find the next item quickly, scan or confirm it, recover from a mismatch, move on. Composition favors a clear task queue, high-contrast quantities and large touch actions, not a hero headline, charts or decorative illustrations. Slow network and offline states matter. Inventory changes must be reconciled server-side.

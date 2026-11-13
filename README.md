@@ -48,7 +48,7 @@ The skill is designed for Claude Code, Gemini CLI, Antigravity and Codex, as wel
 
 ## Consistent design across coding agents
 
-`backend-to-ui` v1.5 uses a **project-scoped `UI_CONTRACT.json`** to record existing brand and component decisions, the user’s primary task, the chosen composition, what must remain working, and the source of each decision. The next agent reads the same contract instead of imposing its own look. New creative decisions remain **provisional** until supported or approved. Existing project choices can be recorded as **observed** without pretending user approval. A small fix doesn't require generating a new contract.
+`backend-to-ui` v1.6 uses a **project-scoped `UI_CONTRACT.json`** to record existing brand and component decisions, the user’s primary task, the chosen composition, what must remain working, and the source of each decision. The next agent reads the same contract instead of imposing its own look. New creative decisions remain **provisional** until supported or approved. Existing project choices can be recorded as **observed** without pretending user approval. A small fix doesn't require generating a new contract.
 
 The skill ships an [example contract](skills/backend-to-ui/assets/UI_CONTRACT.example.json) and [contract policy](skills/backend-to-ui/references/design-contract.md), plus a standard-library validator:
 
@@ -78,11 +78,38 @@ python3 skills/backend-to-ui/scripts/doctor.py --host antigravity --strict
 
 `doctor.py` checks **on-disk discovery candidates and stale duplicates only**; it cannot confirm actual activation. Inside interactive `agy`, run `/skills reload`, `/skills`, then `/backend-to-ui`; `agy skills list --all` is not supported. Do not require a `gemini` binary when using AGY. Read the [host troubleshooting guide](skills/backend-to-ui/references/host-compatibility.md) for exact paths and precedence.
 
+## English-only agent communication and anti-template design
+
+All skill-generated **agent questions, option labels, recommendations, progress, audit findings, and summaries use English**. That does **not** translate an existing application's user-facing copy; app localization follows the user's requirements.
+
+The stack decision asks about **one minimal, justified framework** rather than bundling Next.js + Tailwind + Three.js + an animation library as defaults. The swarm question is **not** offered for a single UI/card, and is never displayed alongside an unresolved stack question. Product identity and real user tasks take priority over agent-specific design tastes. [Stack selection rules](skills/backend-to-ui/references/stack-selection.md) · [Visual stop-ship gates](skills/backend-to-ui/references/visual-review.md) · [3D trading card design example](skills/backend-to-ui/references/cases.md).
+
+## Token measurement and Caveman-inspired efficiency
+
+The skill adopts the useful parts of [Caveman](https://github.com/JuliusBrussee/caveman): concise **accurate** explanations, bounded tool logs and targeted context loading. It does **not** use Caveman's broken-English output style, install its proxy, or claim its advertised token savings.
+
+Measure the **static skill text budget** locally:
+
+```bash
+python3 skills/backend-to-ui/scripts/token_report.py
+python3 skills/backend-to-ui/scripts/token_report.py --json
+```
+
+The report's `characters / 4` estimate is **not AGY billed tokens**. For exact **loaded Skill-file tokens** during an interactive `agy` session, run `/context` and inspect the Skill-files section. For a **separate headless run**:
+
+```bash
+agy -p "Use backend-to-ui to audit this repository read-only; do not edit files." \
+  --output-format json > /tmp/agy-run.json
+python3 skills/backend-to-ui/scripts/token_report.py --usage-json /tmp/agy-run.json
+```
+
+The headless command consumes actual model usage and the result reflects the **whole session**, not the skill alone. More accurate A/B savings require the same project, task, model and tests with/without skill, including interaction quality. See [measurement protocol](skills/backend-to-ui/references/token-measurement.md) and [official AGY context docs](https://antigravity.google/docs/cli/commands/context).
+
 ## Efficient workflow, optional subagents and live testing
 
 The skill uses a **risk-first, progressive-disclosure workflow**: inspect only affected files, reuse existing tokens and components, run focused checks before broader suites, and keep reports concise. It loads [lean-workflow.md](skills/backend-to-ui/references/lean-workflow.md) only as needed.
 
-**Subagents / agent swarm are never automatic.** For a sufficiently large task with independent workstreams and an actual available tool, the agent asks once whether to parallelize. Users can keep a single agent to minimize token usage. [Parallel execution policy](skills/backend-to-ui/references/parallel-work.md). AGY documents `/swarm`, but use it only after explicit opt-in; not every host has equivalent tools.
+**Subagents / agent swarm are never automatic.** Only when multiple independent workstreams and a real tool exist may the agent ask once, in English, **after** stack choice is resolved. A single card/site component or tightly coupled page does not trigger that question. Users can keep a single agent to minimize token usage. [Parallel execution policy](skills/backend-to-ui/references/parallel-work.md). AGY documents `/swarm`, but use it only after explicit opt-in; not every host has equivalent tools.
 
 **Live browser QA** uses the existing browser, Chrome DevTools/CDP, Playwright, browser-agent or supported plugin **when available**, with actual navigation, interactions, console/network checks, and desktop/mobile screenshots. No fabricated success when the host lacks tools. [Live-browser protocol](skills/backend-to-ui/references/live-browser.md).
 
@@ -119,9 +146,11 @@ skills/backend-to-ui/
     lean-workflow.md         # Token-efficient, risk-first workflow
     parallel-work.md         # User-approved optional subagent execution
     live-browser.md          # Browser, DevTools, and interactive QA
+    token-measurement.md     # Exact vs estimated token metrics
   assets/UI_CONTRACT.example.json
   scripts/check_contract.py
   scripts/doctor.py
+  scripts/token_report.py       # Static estimates and optional AGY usage JSON
 evals/                       # Behavioral scenarios + evidence scorer
 tests/                       # Repository and evaluator tests
 ```

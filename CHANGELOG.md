@@ -4,6 +4,16 @@ This project follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) in
 
 ## [Unreleased]
 
+### v1.6.0 — English-only prompts, scoped token telemetry, and product-specific visual QA
+- Require consistent English agent-facing questions and option labels while preserving the target application's locale.
+- Do not ask optional swarm questions alongside a pending frontend stack question, or for one tightly coupled UI/card task.
+- Reject default multi-library frontend bundles; choose the smallest justified stack and test CSS 3D before introducing unnecessary render engines.
+- Add an authentic 3D trading card case and stronger structural anti-template visual gates.
+- Apply Caveman-inspired concise technical responses and bounded context reads without changing code, safety warnings, or language clarity.
+- Add `token_report.py` with labeled static text estimates and optional **actual whole-run AGY** usage extraction; document `/context` per-skill loaded-token inspection.
+- Extend CI/QA tests for language consistency, front-end stack restraint, scope, and token metrics.
+
+
 ### v1.5.0 — lean and evidence-first execution
 - Cut the core skill's prompt footprint and load task-specific references progressively, preserving hard quality gates.
 - Make optional subagent/swarm execution user-opt-in only, with explicit token-cost tradeoffs, isolated work ownership and one integration owner.
