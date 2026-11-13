@@ -1,58 +1,45 @@
-# Existing frontend — safe product improvement
+# Existing frontend: change safely, preserve the product
 
-**This skill is not only for backend-only repositories.** Use it on frontend-only projects, production web/mobile frontends, and full-stack applications with established interfaces. Do not treat the absence of a backend as a blocker for redesign, UX, accessibility or interaction work.
+Works for **frontend-only**, full-stack and native apps. Lack of a backend does not prevent a real UX redesign; lack of an explicit stack decision *does* block UI file edits. See [stack-selection.md](stack-selection.md).
 
-## Preserve design decisions across agents
+## Inspect what exists (scoped)
 
-Read an existing `UI_CONTRACT.json` before editing an existing frontend; see [design-contract.md](design-contract.md). If absent, first inspect real brand assets, tokens and UI screens. **Do not force a new JSON file for a small bug or component fix**; persist a provisional, source-backed direction only for substantial ongoing design work when appropriate. Treat current layout as evidence, not automatic user approval. The host model's taste cannot override the user's brand decisions. Use the scoped, token-efficient [lean workflow](lean-workflow.md).
+Identify only relevant:
+- framework/renderer, package scripts, active route/page, reusable components;
+- brand tokens, typography, layout conventions, localization and authentic assets;
+- state and data owner (stores, page props, services, persistence, permissions);
+- existing interactions (navigation, forms, keyboard/touch, loading/errors);
+- current tests/screenshots or UI baselines.
 
-## Discover the existing implementation
+Use an existing `UI_CONTRACT.json` if present. When absent, existing tokens and components are **observed evidence**, not automatic user approval; a small fix does not need a new file. If major design direction changes, consider a provisional source-backed contract (see [design-contract.md](design-contract.md)).
 
-Read the relevant parts of the project instead of guessing:
-- **Framework and renderer:** package manifest, framework config, entry point, page/route structure, SSR or native boundaries, build scripts.
-- **Design language:** existing palette, typography, CSS variables/tokens, component library, icons/illustrations, brand and image assets.
-- **State and data:** stores, hooks/composables/services, existing fixtures, API clients, server data, persistence, permissions.
-- **Interaction contract:** navigation, forms, keyboard/touch flows, loading and failure states, animations, focus, localization and responsive states.
-- **Safety net:** tests, storybooks, UI screenshots, accessibility checks, typecheck/build, performance baselines.
+## Scope before editing
 
-Make a short **preservation map**: what may change vs what cannot change. Never delete an existing feature or backend integration just to simplify a redesign.
+**Preservation map:** what must keep working vs what can change. No removal of unrelated routes, state, access controls or backend integration merely to simplify the UI. Avoid new frameworks, extra data owners, duplicate API calls, needless libraries and unrelated app shells.
 
-## Mandatory stack choice applies
+- Small fix: patch the smallest component; reuse current visual identity and libraries.
+- Feature: reuse routing/state patterns, verify changed user journey and existing related flows.
+- Full redesign: inspect screens, establish domain-specific hierarchy and tokens, migrate incrementally while protecting working interactions.
+- Backend-only: require selected stack and map actual handlers; no invented CRUD, metrics or permissions.
 
-If the user names a frontend framework, use it unless materially incompatible with the repository; explain the conflict. If they explicitly say "use the existing stack", detect it and proceed. If the user did **not** specify or authorize a stack, ask once before editing, even when Vue, React or plain HTML is detected. Read-only audits proceed without asking. See [stack-selection.md](stack-selection.md).
+## Stack idioms
 
-## Choose the least disruptive change
-
-- Prefer existing design tokens, routing conventions, state/query libraries, component APIs and build setup. Compose or refactor existing components when useful; avoid duplicate global state.
-- If a request is scoped to one feature or screen, do not redesign unrelated surfaces. Preserve keyboard paths, translations, themes and motion preferences.
-- If the user specifically requests a comprehensive redesign, audit screen-by-screen, establish a consistent visual language, then migrate incrementally with working checkpoints.
-- Preserve feature flags and role/permission logic; verify the same workflows after changes.
-- Do not introduce fake APIs, data, role handling, toasts, animations or mock controls without labeling them as prototypes.
-- No generic "dashboard-ification": choose task-first composition, test real content and criticize screenshots.
-
-## Practical framework idioms
-
-| Existing frontend | Preserve first | Avoid |
+| Existing frontend | Preserve | Avoid |
 | --- | --- | --- |
-| React / Preact / Next / Remix | component props, route boundaries, hooks, query owners, SSR/RSC semantics | gratuitous rerender, redundant fetch layers |
-| Vue / Nuxt / Inertia | composables, stores, page props, transitions, component events | refetching page props, deep proxying huge arrays |
-| Angular | services/DI, router, reactive forms, signals/observables | subscriptions without cleanup, competing state sources |
-| Svelte / SvelteKit / Astro / Solid / Qwik | current render mode, actions/loaders, reactivity and navigation | forcing SPA or hydration everywhere |
-| Django/Rails/WordPress/HTMX/templates | server templates, progressive enhancement, accessible forms | rebuilding as React without authorization |
-| Plain HTML/CSS/JS | semantic markup, existing CSS structure, keyboard behavior | unnecessary bundler/framework |
-| Flutter/SwiftUI/Jetpack Compose/React Native | lifecycle, navigation, native controls, accessible state | applying browser-only patterns to mobile |
+| Vue / Inertia / Nuxt | page props, composables, state, SSR and routing | re-fetching page props, deeply reactive giant lists |
+| React / Next / Remix | route boundaries, installed state/query libraries, SSR | redundant client/server requests, global rerenders |
+| Angular / Svelte / Solid / Astro | existing DI/reactivity, loaders, lifecycle | unnecessary replatforming/hydration |
+| WordPress / Django / Rails / HTMX | templates, navigation and progressive enhancement | replacing everything with a SPA |
+| Plain HTML/CSS/JS | semantic markup, current styling and accessible events | adding a framework without approval |
+| Flutter / SwiftUI / Compose / React Native | native controls, lifecycle, accessibility | assuming browser/CSS primitives |
 
-The list is illustrative, **not an allowlist**. For an unfamiliar frontend, inspect its own framework docs and project conventions. Never force a favorite technology.
+Other frameworks are supported through their **actual project conventions**, not a static template.
 
 ## Regression checklist
 
-1. Capture initial screen state and identify top user task.
-2. Implement the chosen layout/interaction in existing components.
-3. Verify old and new routes, active tabs, forms, search/filter, sorting, pagination, animations, state restoration, themes and localization.
-4. Test slow/failed data, rapid actions and long lists if the app uses them.
-5. Capture desktop/mobile before/after screenshots; fix visual stop-ship defects.
-6. Test the actual running product with the available browser/DevTools/agent-browser tool when possible (see [live-browser.md](live-browser.md)). Report tested behavior and risks. If browser/device tooling is unavailable, mark live QA unverified.
+1. Test primary task and preserve related routes, forms, selection, filter, state persistence, localization and permission behavior.
+2. Test relevant loading/empty/error/retry and fast repeated user actions.
+3. Inspect actual desktop/mobile UI (or native target device) and changed interaction in real browser/device tools when available; see [live-browser.md](live-browser.md).
+4. Fix composition/interaction issues, rerun affected checks and report any unavailable evidence.
 
-## Cross-stack scope
-
-The skill provides an engineering workflow, not working code for every framework. Agent ability depends on the project's available tools, tests and actual framework support. Maintain the existing application's architecture unless an explicit migration is requested.
+Never call fixtures production, claim unseen screenshots were inspected, or conceal untested flows.

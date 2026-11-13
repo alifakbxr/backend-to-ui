@@ -1,41 +1,32 @@
 # Mandatory frontend stack selection
 
-**Scope:** any work that implements, generates, rewrites, or redesigns frontend code. This is a user-choice gate, **not** a recommendation to use any one framework.
+**English-only question.** User choice controls implementation. A backend language or package manager does not authorize a frontend framework.
 
-## The decision, in order
+1. If the user **explicitly chose a stack**, use it unless incompatible with hard project constraints.
+2. If the user **explicitly authorized reusing the existing stack** and the repo clearly identifies it, proceed in-place. Don't ask again.
+3. Otherwise, inspect existing frontend files, **ask one direct question**, and wait. Do not create or edit frontend implementation files until answered. Never silently fall back to native HTML, React or any preferred framework. Only read-only audit is exempt.
 
-1. **Read the user's explicit frontend choice.** Examples: React, Vue, Vue + Inertia, Next.js, Angular, Svelte, Flutter, SwiftUI, native HTML/CSS/JavaScript. This resolves the gate. A backend language (Laravel, Django, Go) or API format (REST, JSON, GraphQL) alone does **not** specify a frontend stack.
-2. **Check for explicit authorization to keep the project's existing frontend stack.** Examples: "reuse the current frontend framework", "stay with the existing UI stack", "do not replace the frontend framework". Only treat this as sufficient if the actual frontend technology is unambiguous from files and dependencies. If the repository is backend-only, this cannot authorize a nonexistent frontend stack.
-3. **Otherwise inspect project files and ask one question.** Detection is **context for the question, not permission to implement**:
-   - Detected Vue + Inertia: "I found Vue + Inertia. Should I use that for the frontend, or do you want a different stack?"
-   - Backend-only Laravel: "Which frontend stack should I use for this Laravel backend (for example, Vue + Inertia, React + Inertia, or another stack)?"
-   - Existing static site: "This project uses plain HTML/CSS/JavaScript. Should I continue with that, or use a framework?"
-   - Mixed/ambiguous frontend: "I found multiple frontend frameworks. Which one should this work use?"
-4. **Do not create or edit frontend implementation files until answered.** Reading the repository, inspecting API contracts, and giving a concise preliminary design assessment are allowed. Do not quietly scaffold plain HTML, install dependencies, pick React, or start generating components.
-5. Once the user confirms the choice, **continue autonomously through mapping, design, implementation, testing, visual review and delivery**. Preserve existing auth, backend contracts and user decisions.
+**Do not combine the stack question with an optional swarm question.** Finish stack choice first. All agent questions, explanatory labels and recommendations must be in English.
 
-## Exceptions
+Examples:
+- Existing Vue + Inertia: "I found Vue + Inertia. Should I keep this frontend stack or use another one?"
+- Backend-only Laravel: "Which frontend stack should I use for this project?"
+- Multiple frontends: "Which existing frontend should I work in?"
+- Existing plain HTML: "Should I preserve the existing HTML/CSS/JS frontend?"
 
-- **Read-only audits / design reviews:** can proceed without a selected stack because they do not implement UI. If the user later requests implementation, run this gate.
-- **Explicit native HTML request:** use native HTML/CSS/JS. Native HTML is valid when chosen by the user; it is not a fallback.
-- **Existing stack explicitly authorized:** "use the existing stack" is sufficient when that stack is unambiguous. Never demand a second confirmation just to create extra back-and-forth.
-- **Explicit "choose for me" without naming a stack:** still ask, because this skill intentionally requires a deliberate frontend technology decision. Offer a contextual recommendation in the question if helpful.
-- **A user asks to keep everything while changing only copy or styles:** this is still implementation. If no stack is specified or existing-stack reuse authorized, ask first. The goal is predictable behavior, not maximizing zero-question turns.
+## Minimum viable stack, not a bundle
 
-## Conflict handling
+Distinguish the frontend framework from optional CSS, rendering, 3D, state and animation libraries. Recommend **one minimal stack** grounded in project evidence; do not present Next.js, Tailwind, Three.js and Framer Motion as one mandatory recommendation.
 
-If the chosen stack conflicts with platform requirements or the repository architecture, explain the conflict and ask one focused question about changing the choice. Do not silently override. Do not rewrite backend auth/data contracts just to accommodate a preferred frontend tool.
+For a 3D trading card: CSS perspective/transforms can deliver tilt, flip and glare; use WebGL/Three.js only when actual geometry, shader or scene requirements justify it. Animation libraries are optional when existing CSS or installed project tools can handle the behavior. Next.js is a possible SSR/routing decision, not the default for every card website.
 
-## Evaluation expectations
+If the user says "choose for me" without naming a stack, this skill still asks for deliberate stack confirmation; include a minimal contextual recommendation in **that one question**. Never silently scaffold a parallel frontend.
 
-For a missing-stack scenario:
-- Agent asks an explicit frontend-stack question.
-- No frontend files changed; no dependency installation or scaffolding.
-- Question can name detected framework, but cannot imply it was already authorized.
+## Scope and safety
 
-For an approved-stack scenario:
-- Agent does **not** ask the same question again.
-- Agent proceeds through real backend mapping and functional/visual QA.
-- Native HTML appears **only** when explicitly chosen.
+- Read-only audits can inspect current code without stack consent, but must ask before subsequent implementation.
+- A user-approved existing stack means reuse, **not authorization to replace brand, auth, routes or state**.
+- If a chosen stack conflicts with platform requirements, explain the exact conflict and ask one focused follow-up.
+- After choice, proceed through real implementation and QA without repeated permission prompts.
 
-See [evaluation scenarios](../../../evals/scenarios.json) and [run instructions](../../../evals/README.md).
+Behavioral cases: [scenarios.json](../../../evals/scenarios.json). A missing-choice case must ask and leave frontend files unchanged; an approved-choice case should implement and test.

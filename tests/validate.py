@@ -20,6 +20,7 @@ REQUIRED_DOCS = (
     "tests/test_evals.py",
     "tests/test_portability.py",
     "tests/test_workflow_policy.py",
+    "tests/test_token_budget.py",
     "tests/test_compare_agents.py",
     "evals/compare_agents.py",
     ".github/workflows/validate.yml",
@@ -80,6 +81,11 @@ def main() -> None:
     # Regression gate: generic-skin redesigns must be explicitly blocked by skill guidance.
     check("product mode" in skill.lower(), "Skill must require product-mode analysis")
     check("UI_CONTRACT.json" in skill, "Skill must load project design contract")
+    check("English for all" in skill, "Skill must require English agent-facing messages")
+    check("never display it alongside" in skill.lower(), "Optional swarm question cannot accompany a blocking stack question")
+    check("minimum viable" in (SKILL_DIR / "references/stack-selection.md").read_text(encoding="utf-8").lower(), "Stack recommendations must minimize unused dependencies")
+    check((SKILL_DIR / "scripts/token_report.py").is_file(), "Missing token budget reporter")
+    check((SKILL_DIR / "references/token-measurement.md").is_file(), "Missing actual AGY usage protocol")
     check(len(skill) < 9000, "Keep SKILL.md lean; move task-specific details to references")
     check("explicit opt-in" in skill.lower(), "Parallel agents require user opt-in")
     check("live browser" in skill.lower(), "Main workflow must require live browser QA when available")

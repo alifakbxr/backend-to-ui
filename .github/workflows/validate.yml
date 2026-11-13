@@ -18,6 +18,8 @@ jobs:
         run: python3 tests/validate.py
       - name: Test behavioral evaluation rules and scenarios
         run: python3 -m unittest discover -s tests -p 'test_*.py' -v
+      - name: Report estimated skill text footprint (not AGY usage)
+        run: python3 skills/backend-to-ui/scripts/token_report.py
 
   host-install:
     name: Check ${{ matrix.host }} installation path
