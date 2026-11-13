@@ -56,7 +56,7 @@ The skill ships an [example contract](skills/backend-to-ui/assets/UI_CONTRACT.ex
 python3 skills/backend-to-ui/scripts/check_contract.py --contract /path/to/project/UI_CONTRACT.json --project-root /path/to/project
 ```
 
-The validator checks **structure and provenance**, not aesthetic excellence. Real visual QA still requires screenshots and working interactions. Existing projects preserve their stack and design system unless a change is explicitly approved.
+The validator checks **structure and provenance**, not aesthetic excellence. Real visual QA still requires screenshots and working interactions. Compare two actual agent runs with `python3 evals/compare_agents.py agent-a.json agent-b.json`, holding the project commit, contract SHA and prompt fingerprint constant. Existing projects preserve their stack and design system unless a change is explicitly approved.
 
 ## Antigravity and Gemini CLI: install and verify
 

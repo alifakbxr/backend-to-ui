@@ -19,6 +19,8 @@ REQUIRED_DOCS = (
     "evals/score.py",
     "tests/test_evals.py",
     "tests/test_portability.py",
+    "tests/test_compare_agents.py",
+    "evals/compare_agents.py",
     ".github/workflows/validate.yml",
 )
 

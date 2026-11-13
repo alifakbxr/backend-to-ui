@@ -9,6 +9,7 @@ This project follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) in
 - Require explicit provenance for design decisions and reject inference-backed `approved` contracts.
 - Add Antigravity/Gemini/Codex on-disk diagnostic with duplicate/stale copy detection and honest activation limitations.
 - Extend tests and CI with contract provenance and host-discovery regression checks.
+- Add a cross-agent evidence comparer that rejects mismatched project/skill/contract/prompt fingerprints and reports unverified claims explicitly.
 - Preserve existing-frontend workflows, mandatory stack selection, and zero promotional videos/GIFs.
 
 

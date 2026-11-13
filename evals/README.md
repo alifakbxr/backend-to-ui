@@ -8,6 +8,16 @@ For any claim of consistent design across ChatGPT, Antigravity, Gemini CLI, Code
 
 The repo includes deterministic contract and on-disk discovery unit tests, **not** a benchmark showing all commercial agents produced identical interfaces. Run actual agents and review artifacts before making performance or taste claims.
 
+### Comparing recorded runs
+
+Once you have actually run the same case in two agents, record each run with `agent`, `skill_commit`, `repo_commit`, `contract_sha256`, `prompt_sha256`, and the existing `cases` array. The fingerprints must be exactly the same across runs:
+
+```bash
+python3 evals/compare_agents.py /tmp/gemini-run.json /tmp/antigravity-run.json
+```
+
+The comparer rejects mismatched inputs, duplicate names, missing scenarios, failed outcomes and incomplete evidence. A `pass` checks **the supplied records**, not the authenticity of screenshots or whether the agent actually activated the skill. Review raw transcripts and browser artifacts separately. Do not use fabricated example records as benchmarks.
+
 ## What is covered
 
 [scenarios.json](scenarios.json) contains 19 cases: missing stack, explicit stack, existing stack without authorization, explicitly authorized reuse, conflicts, read-only audits, backend integration, visual critique, and large-data/performance risks. The **mandatory stack choice** takes precedence over one-shot generation. A detected stack is not consent; native HTML is allowed only when chosen explicitly.

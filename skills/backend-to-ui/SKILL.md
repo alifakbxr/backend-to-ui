@@ -77,7 +77,7 @@ After edits: report `changed_files`, `preserved_flows`, `functional_tests`, `vis
 
 ## Portable validation
 
-From a clone of this skill repository, run `python3 scripts/doctor.py --host all` for **on-disk host discovery**, then confirm skill activation inside each host UI separately. The doctor never claims activation. On a user project run `python3 <skill-dir>/scripts/check_contract.py --contract <project>/UI_CONTRACT.json`. If Python is unavailable, manually follow the same documented checks and report that automation was unavailable.
+From a clone of this skill repository, run `python3 skills/backend-to-ui/scripts/doctor.py --host all` for **on-disk host discovery**, then confirm skill activation inside each host UI separately. The doctor never claims activation. On a user project run `python3 <skill-dir>/scripts/check_contract.py --contract <project>/UI_CONTRACT.json`. If Python is unavailable, manually follow the same documented checks and report that automation was unavailable.
 
 ## Example trigger
 
