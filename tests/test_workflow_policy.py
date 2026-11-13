@@ -21,7 +21,7 @@ class LeanWorkflowPolicyTests(unittest.TestCase):
         policy = read("references/parallel-work.md")
         self.assertIn("explicit opt-in", skill)
         self.assertIn("never invoke a subagent", policy)
-        self.assertIn("more total tokens", policy)
+        self.assertIn("increase total tokens", policy)
         self.assertIn("if declined", skill)
         self.assertIn("single-agent", policy)
         self.assertIn("one coordinator", policy)

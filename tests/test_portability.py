@@ -94,6 +94,7 @@ class ContractTests(unittest.TestCase):
     def test_file_source_must_exist(self):
         value = self.fixture()
         value["direction"]["source"] = "file:src/tokens.css"
+        value["direction"]["status"] = "observed"
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
             self.assertTrue(any("does not exist" in e for e in contract.validate(value, root)))
