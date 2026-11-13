@@ -41,18 +41,18 @@ jobs:
           node "$RUNNER_TEMP/video-demo/scripts/scaffold.mjs" --site https://github.com/alifakbxr/product-ui --project "$RUNNER_TEMP/product-ui-video-demo"
           cp .github/video-demo/demo.config.ts "$RUNNER_TEMP/product-ui-video-demo/demo.config.ts"
           rm -f "$RUNNER_TEMP/product-ui-video-demo/scenes/smoke.scene.ts"
-          cp .github/video-demo/scenes/skill-tour.scene.ts "$RUNNER_TEMP/product-ui-video-demo/scenes/skill-tour.scene.ts"
+          cp .github/video-demo/scenes/voice-track.scene.ts "$RUNNER_TEMP/product-ui-video-demo/scenes/voice-track.scene.ts"
       - name: Film one narrated scene
         env:
           DEMO_VOICE: '1'
           DEMO_TOUR: '0'
           DEMO_TRACE_FRAMES: '1'
         run: |
-          "$RUNNER_TEMP/video-demo/scripts/demo" --project "$RUNNER_TEMP/product-ui-video-demo" --grep skill-tour
+          "$RUNNER_TEMP/video-demo/scripts/demo" --project "$RUNNER_TEMP/product-ui-video-demo" --grep voice-track
       - name: Upload original capture, stills and frame timings
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: product-ui-video-demo-scene
+          name: product-ui-video-demo-narration
           path: ${{ runner.temp }}/product-ui-video-demo/demo-out/
           retention-days: 7
