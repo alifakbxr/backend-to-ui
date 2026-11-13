@@ -2,6 +2,10 @@
 
 This guide explains how the short Agent Skill becomes a complete product interface. It is stack-neutral and does not replace the host repository's architecture.
 
+## 0. Resolve frontend stack before implementation
+
+First read the [mandatory tech stack policy](../skills/backend-to-ui/references/stack-selection.md). If the user did not name a frontend stack or explicitly authorize reuse of a detected one, **ask before editing any frontend code**. Read-only auditing may proceed. Do not treat a backend framework, API protocol or package-manager presence as a frontend choice. This necessary question takes precedence over one-shot execution.
+
 ## 1. Read the product and backend
 
 Inspect existing source, screenshots, brand tokens, user stories, handlers, policies and data shapes. Identify the primary user's task, device and product mode: operate, explore, play, create, read or persuade. Distinguish evidence from inference. A screenshot with negative visual feedback is evidence that the existing UI quality gate failed.
@@ -29,6 +33,10 @@ Complete the primary user task before decorative polish. Include loading, empty,
 Capture desktop and phone (plus an intermediate size if feasible), inspect **the actual page**, rank high-impact defects, fix composition/hierarchy first, then capture again. A technically working UI is not ready if its principal feature is lost in a tiny central panel or its visual language could be transplanted to an unrelated product.
 
 Read the full [visual-review.md](../skills/backend-to-ui/references/visual-review.md) gates. A serious product-fit, composition or usability defect is a stop-ship condition, not polish backlog. If no rendering tools are available, disclose that visual review could not be completed.
+
+## Evidence-based acceptance
+
+Use [evals/README.md](../evals/README.md) to record actual agent runs against scenario cases. Structural CI validates files and the evaluation harness; it does **not** demonstrate that a given agent passed one-shot, visual or performance tests. For real frontend changes, capture desktop/mobile screenshots when available and measure representative network and rendering behavior. Record unavailable checks as **not run**, not passed.
 
 ## Completion criteria
 

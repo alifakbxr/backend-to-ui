@@ -4,6 +4,17 @@ This project follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) in
 
 ## [Unreleased]
 
+### Added
+- Mandatory frontend-stack choice gate: ask when unspecified; no silent native HTML fallback.
+- Portable behavioral evaluation scenarios, evidence format and offline evaluation runner.
+- Performance/visual acceptance scenarios with honest reporting of unexecuted agent runs.
+- Release checklist and version-consistent documentation.
+
+### Changed
+- Clarified that one-shot begins after frontend stack choice is resolved.
+- Extended CI with evaluator unit tests and scenario coverage checks.
+
+
 ## [1.1.0] - 2026-11-12
 
 ### Changed

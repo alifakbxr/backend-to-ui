@@ -3,7 +3,7 @@ name: backend-to-ui
 description: Turn existing backend routes, APIs, models, page props and business rules into complete, fast, accessible, distinctive frontends for any stack. Use for backend-only projects, redesigns, data-heavy UIs and one-shot implementation. Includes context-first art direction, anti-generic design critique, real-data integration and visual verification.
 license: MIT
 metadata:
-  version: "1.1.0"
+  version: "1.2.0"
 ---
 
 # Backend to UI
@@ -12,9 +12,21 @@ Turn **what the backend supports** into **what people need and want to use**. A 
 
 ## How to work
 
-One request should run end-to-end when the repository and tools permit. Do not stop at a plan or design mockup. Keep the existing stack, auth and brand. Ask only about blockers or high-risk changes; label reasonable assumptions instead of inventing facts.
+One request should run end-to-end when the repository and tools permit, **after the required frontend stack is selected**. Do not stop at a plan or mockup. Keep the existing stack, auth and brand. Ask only about true blockers or high-risk changes **except the mandatory frontend stack decision below**; label reasonable product assumptions instead of inventing facts.
 
-1. **Inspect.** Read routes/handlers, schemas, tests, permissions, response shapes, pagination, errors, existing screens, assets, style tokens and product docs. Read [data contracts](references/data.md). Never invent actions, roles, KPI values or endpoints.
+## Mandatory frontend stack gate (before editing UI files)
+
+If implementation or redesign is requested, read [stack decision policy](references/stack-selection.md) **before changing frontend code**.
+
+- If the user explicitly names a frontend stack (including plain/native HTML/CSS/JS), use it unless incompatible with hard repository constraints; explain any conflict.
+- If the user explicitly authorizes **reuse of the existing frontend stack** and one is reliably detected, proceed with that stack.
+- If no stack is specified or authorized, **ask one direct question**. If the repo uses Vue + Inertia, for example: "I found Vue + Inertia. Should I continue with it, or use another frontend stack?" If no frontend is present: "Which frontend stack should I use?"
+- **Do not create or modify frontend implementation files before the answer. Never silently fall back to native HTML/CSS/JavaScript, React, Vue or any other framework.** Backend language, a JSON endpoint, and a package manager alone are not frontend-stack consent.
+- A read-only audit may proceed without this question; ask before subsequently implementing changes. Once the stack is confirmed, perform remaining steps autonomously and only ask again for a genuine blocker.
+
+**One-shot** means one request can complete the implementation when the stack decision is already resolved; it does not override this explicit user-choice gate.
+
+1. **Inspect.** Verify the frontend stack gate, then read routes/handlers, schemas, tests, permissions, response shapes, pagination, errors, existing screens, assets, style tokens and product docs. Read [data contracts](references/data.md). Never invent actions, roles, KPI values or endpoints.
 2. **Understand.** Identify the real user, job, device, environment, emotional expectation and **product mode**: operate, explore, play, create, read or persuade. Separate observed facts from assumptions. Do not infer the information architecture from database table names. Read [design direction](references/design.md).
 3. **Map.** Link each principal user task and visible action to an existing authorized handler, fields, states and recovery flow. Preserve SSR, native, Inertia, GraphQL or other idioms already used; no automatic React/REST rewrite.
 4. **Plan for speed.** Trace database → serializer → transport → UI state → rendered view. Plan bounded payloads, pagination, cache scope, request deduplication, cancellation/race safety and efficient list rendering. Read [performance](references/performance.md).
@@ -25,6 +37,7 @@ One request should run end-to-end when the repository and tools permit. Do not s
 
 ## Hard gates
 
+- **Stack truth:** explicit choice or explicit reuse authorization is required before frontend implementation; detected stack alone is not permission. Never default to native HTML.
 - **Backend truth:** no fabricated data, fake functionality, hidden authorization bypasses or unsafe client-side assumptions.
 - **Product truth:** screen hierarchy must express the product's defining action or subject. A playful game, a dense operations queue and a medical record must not receive the same page shell.
 - **Composition truth:** do not ship a tiny central app surrounded by unused desktop canvas, uniform card grids, repeated pill badges or layers of chrome unless they genuinely serve the task.
@@ -34,6 +47,7 @@ One request should run end-to-end when the repository and tools permit. Do not s
 
 ## References (read when needed)
 
+- [stack-selection.md](references/stack-selection.md) — mandatory stack choice and one-shot behavior
 - [data.md](references/data.md) — real contracts, permissions, state handling
 - [performance.md](references/performance.md) — efficient data pipeline, rendering, cache and races
 - [design.md](references/design.md) — product modes and evidence-based visual direction

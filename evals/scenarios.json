@@ -1,0 +1,398 @@
+{
+  "schema_version": 1,
+  "description": "Host-agnostic one-shot behavioral scenarios. These are specifications, not evidence that any coding agent passed.",
+  "scenarios": [
+    {
+      "id": "backend_only_unspecified",
+      "category": "stack_selection",
+      "input": {
+        "project": "Laravel backend exposes REST only; no frontend files",
+        "prompt": "Build the frontend using backend-to-ui.",
+        "frontend_choice": null,
+        "existing_frontend": null,
+        "reuse_existing": false,
+        "audit_only": false,
+        "conflict": false
+      },
+      "expected": {
+        "action": "ask_stack",
+        "stack": null,
+        "gates": [
+          "stack"
+        ]
+      }
+    },
+    {
+      "id": "backend_existing_vue_unspecified",
+      "category": "stack_selection",
+      "input": {
+        "project": "Laravel + Vue 3 + Inertia frontend exists",
+        "prompt": "Use backend-to-ui to redesign this UI.",
+        "frontend_choice": null,
+        "existing_frontend": "Vue + Inertia",
+        "reuse_existing": false,
+        "audit_only": false,
+        "conflict": false
+      },
+      "expected": {
+        "action": "ask_stack",
+        "stack": null,
+        "gates": [
+          "stack"
+        ]
+      }
+    },
+    {
+      "id": "backend_existing_html_unspecified",
+      "category": "stack_selection",
+      "input": {
+        "project": "Plain HTML/CSS/JS frontend exists",
+        "prompt": "Use backend-to-ui to improve this screen.",
+        "frontend_choice": null,
+        "existing_frontend": "native HTML/CSS/JS",
+        "reuse_existing": false,
+        "audit_only": false,
+        "conflict": false
+      },
+      "expected": {
+        "action": "ask_stack",
+        "stack": null,
+        "gates": [
+          "stack"
+        ]
+      }
+    },
+    {
+      "id": "api_only_unspecified",
+      "category": "stack_selection",
+      "input": {
+        "project": "Public REST API; no frontend repo",
+        "prompt": "Turn this API response into a polished app.",
+        "frontend_choice": null,
+        "existing_frontend": null,
+        "reuse_existing": false,
+        "audit_only": false,
+        "conflict": false
+      },
+      "expected": {
+        "action": "ask_stack",
+        "stack": null,
+        "gates": [
+          "stack"
+        ]
+      }
+    },
+    {
+      "id": "user_delegates_choice",
+      "category": "stack_selection",
+      "input": {
+        "project": "Backend-only Node API",
+        "prompt": "Build a nice UI, choose whatever is best.",
+        "frontend_choice": null,
+        "existing_frontend": null,
+        "reuse_existing": false,
+        "audit_only": false,
+        "conflict": false
+      },
+      "expected": {
+        "action": "ask_stack",
+        "stack": null,
+        "gates": [
+          "stack"
+        ]
+      }
+    },
+    {
+      "id": "multiple_frontends_unspecified",
+      "category": "stack_selection",
+      "input": {
+        "project": "React admin and Svelte public site coexist",
+        "prompt": "Design the main page using backend-to-ui.",
+        "frontend_choice": null,
+        "existing_frontend": "mixed",
+        "reuse_existing": false,
+        "audit_only": false,
+        "conflict": false
+      },
+      "expected": {
+        "action": "ask_stack",
+        "stack": null,
+        "gates": [
+          "stack"
+        ]
+      }
+    },
+    {
+      "id": "reuse_requested_no_frontend",
+      "category": "stack_selection",
+      "input": {
+        "project": "Django backend, no UI implementation",
+        "prompt": "Use the existing frontend stack to build the UI.",
+        "frontend_choice": null,
+        "existing_frontend": null,
+        "reuse_existing": true,
+        "audit_only": false,
+        "conflict": false
+      },
+      "expected": {
+        "action": "ask_stack",
+        "stack": null,
+        "gates": [
+          "stack"
+        ]
+      }
+    },
+    {
+      "id": "explicit_vue_inertia",
+      "category": "implementation",
+      "input": {
+        "project": "Laravel backend, no UI yet",
+        "prompt": "Use backend-to-ui with Vue 3 + Inertia.",
+        "frontend_choice": "Vue + Inertia",
+        "existing_frontend": null,
+        "reuse_existing": false,
+        "audit_only": false,
+        "conflict": false
+      },
+      "expected": {
+        "action": "implement",
+        "stack": "Vue + Inertia",
+        "gates": [
+          "backend",
+          "interaction",
+          "visual"
+        ]
+      }
+    },
+    {
+      "id": "explicit_native_html",
+      "category": "implementation",
+      "input": {
+        "project": "REST API only",
+        "prompt": "Use backend-to-ui with native HTML/CSS/JavaScript.",
+        "frontend_choice": "native HTML/CSS/JS",
+        "existing_frontend": null,
+        "reuse_existing": false,
+        "audit_only": false,
+        "conflict": false
+      },
+      "expected": {
+        "action": "implement",
+        "stack": "native HTML/CSS/JS",
+        "gates": [
+          "backend",
+          "interaction",
+          "visual"
+        ]
+      }
+    },
+    {
+      "id": "explicit_react",
+      "category": "implementation",
+      "input": {
+        "project": "Go backend only",
+        "prompt": "Build the frontend with React using backend-to-ui.",
+        "frontend_choice": "React",
+        "existing_frontend": null,
+        "reuse_existing": false,
+        "audit_only": false,
+        "conflict": false
+      },
+      "expected": {
+        "action": "implement",
+        "stack": "React",
+        "gates": [
+          "backend",
+          "interaction"
+        ]
+      }
+    },
+    {
+      "id": "existing_stack_authorized",
+      "category": "implementation",
+      "input": {
+        "project": "Vue + Inertia repository",
+        "prompt": "Use backend-to-ui. Reuse the existing frontend stack.",
+        "frontend_choice": null,
+        "existing_frontend": "Vue + Inertia",
+        "reuse_existing": true,
+        "audit_only": false,
+        "conflict": false
+      },
+      "expected": {
+        "action": "implement",
+        "stack": "Vue + Inertia",
+        "gates": [
+          "backend",
+          "interaction",
+          "visual"
+        ]
+      }
+    },
+    {
+      "id": "explicit_svelte_performance",
+      "category": "implementation",
+      "input": {
+        "project": "API returns 10,000 records",
+        "prompt": "Use Svelte to build a paginated catalogue using backend-to-ui.",
+        "frontend_choice": "Svelte",
+        "existing_frontend": null,
+        "reuse_existing": false,
+        "audit_only": false,
+        "conflict": false
+      },
+      "expected": {
+        "action": "implement",
+        "stack": "Svelte",
+        "gates": [
+          "backend",
+          "performance",
+          "visual"
+        ]
+      }
+    },
+    {
+      "id": "explicit_react_search_races",
+      "category": "implementation",
+      "input": {
+        "project": "JSON search endpoint with variable latency",
+        "prompt": "Use React. Prevent late search responses from overwriting newer results.",
+        "frontend_choice": "React",
+        "existing_frontend": null,
+        "reuse_existing": false,
+        "audit_only": false,
+        "conflict": false
+      },
+      "expected": {
+        "action": "implement",
+        "stack": "React",
+        "gates": [
+          "backend",
+          "performance",
+          "interaction"
+        ]
+      }
+    },
+    {
+      "id": "explicit_flutter_mobile",
+      "category": "implementation",
+      "input": {
+        "project": "Mobile app backend supports pagination and auth",
+        "prompt": "Build a Flutter frontend with backend-to-ui.",
+        "frontend_choice": "Flutter",
+        "existing_frontend": null,
+        "reuse_existing": false,
+        "audit_only": false,
+        "conflict": false
+      },
+      "expected": {
+        "action": "implement",
+        "stack": "Flutter",
+        "gates": [
+          "backend",
+          "interaction"
+        ]
+      }
+    },
+    {
+      "id": "game_redesign_explicit_stack",
+      "category": "implementation",
+      "input": {
+        "project": "Poké Gacha game in React has a tiny central machine",
+        "prompt": "Use React. Redesign the main gacha experience with backend-to-ui.",
+        "frontend_choice": "React",
+        "existing_frontend": "React",
+        "reuse_existing": false,
+        "audit_only": false,
+        "conflict": false
+      },
+      "expected": {
+        "action": "implement",
+        "stack": "React",
+        "gates": [
+          "backend",
+          "interaction",
+          "visual",
+          "performance"
+        ]
+      }
+    },
+    {
+      "id": "audit_only_unspecified",
+      "category": "read_only",
+      "input": {
+        "project": "Legacy page and screenshot available",
+        "prompt": "Use backend-to-ui to audit the UI and report design defects, without modifying files.",
+        "frontend_choice": null,
+        "existing_frontend": "legacy",
+        "reuse_existing": false,
+        "audit_only": true,
+        "conflict": false
+      },
+      "expected": {
+        "action": "audit",
+        "stack": null,
+        "gates": []
+      }
+    },
+    {
+      "id": "audit_only_backend",
+      "category": "read_only",
+      "input": {
+        "project": "Rails backend and static templates",
+        "prompt": "Audit architecture and performance risks only; do not change files.",
+        "frontend_choice": null,
+        "existing_frontend": "native HTML/CSS/JS",
+        "reuse_existing": false,
+        "audit_only": true,
+        "conflict": false
+      },
+      "expected": {
+        "action": "audit",
+        "stack": null,
+        "gates": []
+      }
+    },
+    {
+      "id": "existing_framework_explicit_choice",
+      "category": "implementation",
+      "input": {
+        "project": "Vue app and API exist",
+        "prompt": "Use Vue 3 to update the UI while preserving existing data flows.",
+        "frontend_choice": "Vue 3",
+        "existing_frontend": "Vue 3",
+        "reuse_existing": false,
+        "audit_only": false,
+        "conflict": false
+      },
+      "expected": {
+        "action": "implement",
+        "stack": "Vue 3",
+        "gates": [
+          "backend",
+          "interaction"
+        ]
+      }
+    },
+    {
+      "id": "contradictory_stack",
+      "category": "stack_selection",
+      "input": {
+        "project": "Flutter repo, user requests Vue browser frontend",
+        "prompt": "Use Vue 3 for this Flutter mobile-only repo.",
+        "frontend_choice": "Vue 3",
+        "existing_frontend": "Flutter",
+        "reuse_existing": false,
+        "audit_only": false,
+        "conflict": true
+      },
+      "expected": {
+        "action": "ask_stack",
+        "stack": null,
+        "gates": [
+          "conflict"
+        ]
+      }
+    }
+  ]
+}
