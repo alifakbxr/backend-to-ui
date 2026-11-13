@@ -5,15 +5,9 @@ scene('skill-tour', {
   blurb: 'Real source in product-ui: existing frontend support and the mandatory stack choice.',
 }, async ({ page, actor, shot }) => {
   const intro = page.getByText('Build product-specific interfaces for existing frontend apps', { exact: false }).first();
-  await actor.spotlight(
-    intro,
-    'It starts with the frontend you already have, not an empty template.',
-    { scale: 1.3, stay: true }
-  );
+  await actor.to(intro);
+  await actor.say('It starts with the frontend you already have, not an empty template.');
   await shot('existing-frontend');
-
-  await actor.unfocus();
-  await actor.release();
 
   const policy = page.getByRole('link', { name: 'stack decision policy' }).first();
   await actor.click(policy);
@@ -21,7 +15,7 @@ scene('skill-tour', {
   await actor.spotlight(
     page.getByRole('heading', { name: 'Mandatory frontend stack selection' }),
     'If you haven\'t chosen a stack, it asks before changing your UI.',
-    { scale: 1.45, stay: true }
+    { scale: 1.15, stay: true }
   );
   await shot('stack-policy');
 });
