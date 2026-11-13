@@ -1,4 +1,4 @@
-name: video-demo proof of capture
+name: video-demo film one scene
 
 on:
   push:
@@ -12,9 +12,9 @@ permissions:
   contents: read
 
 jobs:
-  smoke:
+  film:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -26,26 +26,33 @@ jobs:
         run: |
           git clone -q https://github.com/nilbuild/video-demo.git "$RUNNER_TEMP/video-demo"
           git -C "$RUNNER_TEMP/video-demo" checkout --detach "$ENGINE_SHA"
-      - name: Doctor and install browser studio in ephemeral runner
+      - name: Install browser studio on ephemeral runner
+        run: "$RUNNER_TEMP/video-demo/scripts/install.sh"
+      - name: Install local narration model
+        shell: bash
         run: |
-          "$RUNNER_TEMP/video-demo/scripts/doctor.sh" || true
-          "$RUNNER_TEMP/video-demo/scripts/install.sh"
+          set -e
+          curl -LsSf https://astral.sh/uv/install.sh | sh
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+          export PATH="$HOME/.local/bin:$PATH"
+          "$RUNNER_TEMP/video-demo/scripts/install-voice.sh"
       - name: Scaffold public-site workspace
         run: |
           node "$RUNNER_TEMP/video-demo/scripts/scaffold.mjs" --site https://github.com/alifakbxr/product-ui --project "$RUNNER_TEMP/product-ui-video-demo"
           cp .github/video-demo/demo.config.ts "$RUNNER_TEMP/product-ui-video-demo/demo.config.ts"
-          cp .github/video-demo/scenes/smoke.scene.ts "$RUNNER_TEMP/product-ui-video-demo/scenes/smoke.scene.ts"
-      - name: Film smoke scene (no voice in proof run)
+          rm -f "$RUNNER_TEMP/product-ui-video-demo/scenes/smoke.scene.ts"
+          cp .github/video-demo/scenes/skill-tour.scene.ts "$RUNNER_TEMP/product-ui-video-demo/scenes/skill-tour.scene.ts"
+      - name: Film one narrated scene
         env:
-          DEMO_VOICE: '0'
+          DEMO_VOICE: '1'
           DEMO_TOUR: '0'
           DEMO_TRACE_FRAMES: '1'
         run: |
-          "$RUNNER_TEMP/video-demo/scripts/demo" --project "$RUNNER_TEMP/product-ui-video-demo" --grep smoke
-      - name: Upload proof and retina stills
+          "$RUNNER_TEMP/video-demo/scripts/demo" --project "$RUNNER_TEMP/product-ui-video-demo" --grep skill-tour
+      - name: Upload original capture, stills and frame timings
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: video-demo-smoke
+          name: product-ui-video-demo-scene
           path: ${{ runner.temp }}/product-ui-video-demo/demo-out/
           retention-days: 7

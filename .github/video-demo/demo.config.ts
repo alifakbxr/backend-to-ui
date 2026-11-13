@@ -15,5 +15,5 @@ export default defineDemo({
       },
     },
   },
-  tour: ['smoke'],
+  tour: ['skill-tour'],
 });
