@@ -34,12 +34,10 @@ def validate(data: object, root: Path) -> list[str]:
         if not isinstance(value, list) or (nonempty and not value) or any(not isinstance(x, str) or not x.strip() for x in value):
             errors.append(f"{field} must be a {'nonempty ' if nonempty else ''}list of strings")
 
-    seen: list[str] = []
     def source(value: object, field: str) -> None:
         if not isinstance(value, str) or not any(value.startswith(prefix) and len(value) > len(prefix) for prefix in SOURCES):
             errors.append(f"{field} must specify file:, user:, or inference: provenance")
             return
-        seen.append(value)
         if value.startswith("file:"):
             filename = value[5:]
             if filename.startswith(("/", "~")):
@@ -64,8 +62,8 @@ def validate(data: object, root: Path) -> list[str]:
         errors.append("frontend.choice must be user-explicit or existing-authorized")
 
     direction = obj(data, "direction")
-    if direction.get("status") not in ("approved", "provisional"):
-        errors.append("direction.status must be approved or provisional")
+    if direction.get("status") not in ("approved", "observed", "provisional"):
+        errors.append("direction.status must be approved, observed, or provisional")
     for field in ("dominant_subject", "composition", "density"):
         required(direction, field, "direction")
     source(direction.get("source"), "direction.source")
@@ -74,9 +72,13 @@ def validate(data: object, root: Path) -> list[str]:
 
     composition = obj(data, "composition")
     alternatives = composition.get("alternatives")
-    if not isinstance(alternatives, list) or len(alternatives) < 2:
-        errors.append("composition.alternatives must have at least two options")
+    if not isinstance(alternatives, list):
+        errors.append("composition.alternatives must be a list")
         alternatives = []
+    elif len(alternatives) < 2 and direction.get("status") == "provisional":
+        errors.append("new/provisional direction needs two structurally different compositions")
+    elif len(alternatives) == 1:
+        errors.append("composition alternatives need two options or none for existing directions")
     ids: list[str] = []
     descriptions: list[str] = []
     for i, option in enumerate(alternatives):
@@ -87,7 +89,9 @@ def validate(data: object, root: Path) -> list[str]:
         descriptions.append(required(option, "description", f"composition.alternatives[{i}]").casefold())
     if len(ids) != len(set(ids)) or len(descriptions) != len(set(descriptions)):
         errors.append("composition alternatives cannot be duplicates")
-    if composition.get("selected") not in ids:
+    if not isinstance(composition.get("selected"), str) or not composition.get("selected", "").strip():
+        errors.append("composition.selected must be a nonempty string")
+    elif ids and composition.get("selected") not in ids:
         errors.append("composition.selected must name one alternative")
     required(composition, "reason", "composition")
 
@@ -104,8 +108,15 @@ def validate(data: object, root: Path) -> list[str]:
                 continue
             required(item, "claim", f"evidence[{i}]")
             source(item.get("source"), f"evidence[{i}].source")
-    if direction.get("status") == "approved" and any(s.startswith("inference:") for s in seen):
-        errors.append("approved contracts cannot rely on inferred evidence")
+    design_source = direction.get("source")
+    if direction.get("status") == "approved" and not (
+        isinstance(design_source, str) and design_source.startswith("user:")
+    ):
+        errors.append("approved direction requires explicit user: provenance")
+    if direction.get("status") == "observed" and not (
+        isinstance(design_source, str) and design_source.startswith("file:")
+    ):
+        errors.append("observed direction requires existing file: provenance")
     return errors
 
 def main(argv: list[str] | None = None) -> int:

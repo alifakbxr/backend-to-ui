@@ -4,7 +4,7 @@
 
 ## Preserve design decisions across agents
 
-Read the project's `UI_CONTRACT.json` before editing an existing frontend; see [design-contract.md](design-contract.md). If absent, first inspect real brand assets, tokens and UI screens; create a **provisional** contract using observed sources. Treat existing layout as evidence (not necessarily the desired final identity). The agent's own styling preferences cannot override user-approved brand decisions.
+Read an existing `UI_CONTRACT.json` before editing an existing frontend; see [design-contract.md](design-contract.md). If absent, first inspect real brand assets, tokens and UI screens. **Do not force a new JSON file for a small bug or component fix**; persist a provisional, source-backed direction only for substantial ongoing design work when appropriate. Treat current layout as evidence, not automatic user approval. The host model's taste cannot override the user's brand decisions. Use the scoped, token-efficient [lean workflow](lean-workflow.md).
 
 ## Discover the existing implementation
 
@@ -51,7 +51,7 @@ The list is illustrative, **not an allowlist**. For an unfamiliar frontend, insp
 3. Verify old and new routes, active tabs, forms, search/filter, sorting, pagination, animations, state restoration, themes and localization.
 4. Test slow/failed data, rapid actions and long lists if the app uses them.
 5. Capture desktop/mobile before/after screenshots; fix visual stop-ship defects.
-6. Report actual tested behavior and outstanding risks. If browser/device testing is unavailable, say so, don't claim a pass.
+6. Test the actual running product with the available browser/DevTools/agent-browser tool when possible (see [live-browser.md](live-browser.md)). Report tested behavior and risks. If browser/device tooling is unavailable, mark live QA unverified.
 
 ## Cross-stack scope
 

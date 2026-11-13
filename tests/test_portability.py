@@ -62,6 +62,29 @@ class ContractTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             self.assertTrue(any("selected" in e for e in contract.validate(value, Path(tmp))))
 
+    def test_observed_direction_reuses_existing_project_brand(self):
+        value = self.fixture()
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "brand.css").write_text(":root { --brand: #123456 }")
+            value["direction"]["status"] = "observed"
+            value["direction"]["source"] = "file:brand.css"
+            value["composition"]["alternatives"] = []
+            self.assertEqual(contract.validate(value, root), [])
+
+    def test_observed_direction_cannot_be_from_agent_guess(self):
+        value = self.fixture()
+        with tempfile.TemporaryDirectory() as tmp:
+            value["direction"]["status"] = "observed"
+            value["direction"]["source"] = "inference:generic theme"
+            self.assertTrue(any("observed" in e for e in contract.validate(value, Path(tmp))))
+
+    def test_approved_direction_can_contain_separate_uncertain_fact(self):
+        value = self.fixture()
+        value["evidence"].append({"claim": "assumed device", "source": "inference:mobile likely"})
+        with tempfile.TemporaryDirectory() as tmp:
+            self.assertFalse(contract.validate(value, Path(tmp)))
+
     def test_source_cannot_escape_project(self):
         value = self.fixture()
         value["direction"]["source"] = "file:../private/token.txt"

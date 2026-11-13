@@ -4,6 +4,15 @@ This project follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) in
 
 ## [Unreleased]
 
+### v1.5.0 — lean and evidence-first execution
+- Cut the core skill's prompt footprint and load task-specific references progressively, preserving hard quality gates.
+- Make optional subagent/swarm execution user-opt-in only, with explicit token-cost tradeoffs, isolated work ownership and one integration owner.
+- Add live browser/DevTools/Playwright/browser-agent protocol for real interactions, console/network checks, responsive screenshots and truthful unavailable-tool fallback.
+- Distinguish approved, observed and provisional design sources; avoid mandatory contract files and two-composition work for trivial fixes.
+- Fix AGY-specific installation documentation and include `antigravity-cli` in CI install matrix.
+- Add regression checks for opt-in, lean workflow, actual browser evidence and contract status.
+
+
 ### v1.4.0 — portable design authority
 - Introduce a versioned project `UI_CONTRACT.json` with a contract policy, example, and validation script; model/host aesthetic defaults carry no authority.
 - Require explicit provenance for design decisions and reject inference-backed `approved` contracts.

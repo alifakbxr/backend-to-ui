@@ -48,7 +48,7 @@ The skill is designed for Claude Code, Gemini CLI, Antigravity and Codex, as wel
 
 ## Consistent design across coding agents
 
-`backend-to-ui` v1.4 uses a **project-scoped `UI_CONTRACT.json`** to record existing brand and component decisions, the user’s primary task, the chosen composition, what must remain working, and the source of each decision. The next agent reads the same contract instead of imposing its own look. New decisions remain **provisional** until supported or approved.
+`backend-to-ui` v1.5 uses a **project-scoped `UI_CONTRACT.json`** to record existing brand and component decisions, the user’s primary task, the chosen composition, what must remain working, and the source of each decision. The next agent reads the same contract instead of imposing its own look. New creative decisions remain **provisional** until supported or approved. Existing project choices can be recorded as **observed** without pretending user approval. A small fix doesn't require generating a new contract.
 
 The skill ships an [example contract](skills/backend-to-ui/assets/UI_CONTRACT.example.json) and [contract policy](skills/backend-to-ui/references/design-contract.md), plus a standard-library validator:
 
@@ -58,22 +58,33 @@ python3 skills/backend-to-ui/scripts/check_contract.py --contract /path/to/proje
 
 The validator checks **structure and provenance**, not aesthetic excellence. Real visual QA still requires screenshots and working interactions. Compare two actual agent runs with `python3 evals/compare_agents.py agent-a.json agent-b.json`, holding the project commit, contract SHA and prompt fingerprint constant. Existing projects preserve their stack and design system unless a change is explicitly approved.
 
-## Antigravity and Gemini CLI: install and verify
+## Antigravity CLI (AGY), IDE and legacy Gemini CLI
 
-Install separately into each host’s documented global directory:
+For AGY use the actual `antigravity-cli` target. Install the IDE target only if you use the IDE, or the legacy Gemini CLI target only if you actually run `gemini`:
 
 ```bash
+npx skills add alifakbxr/product-ui --skill backend-to-ui --agent antigravity-cli -g
+# Optional: install for the Antigravity IDE
 npx skills add alifakbxr/product-ui --skill backend-to-ui --agent antigravity -g
+# Optional legacy Gemini CLI (not required for agy)
 npx skills add alifakbxr/product-ui --skill backend-to-ui --agent gemini-cli -g
 ```
 
 ```bash
 python3 skills/backend-to-ui/scripts/doctor.py --host all
+python3 skills/backend-to-ui/scripts/doctor.py --host antigravity-cli --strict
 python3 skills/backend-to-ui/scripts/doctor.py --host antigravity --strict
-python3 skills/backend-to-ui/scripts/doctor.py --host gemini-cli --strict --json
 ```
 
-`doctor.py` checks **on-disk discovery candidates and stale duplicates only**; it cannot confirm actual activation. Verify `/backend-to-ui` in Antigravity and `/skills list` / `/skills reload` in Gemini CLI. Read the [host troubleshooting guide](skills/backend-to-ui/references/host-compatibility.md) for exact paths and precedence.
+`doctor.py` checks **on-disk discovery candidates and stale duplicates only**; it cannot confirm actual activation. Inside interactive `agy`, run `/skills reload`, `/skills`, then `/backend-to-ui`; `agy skills list --all` is not supported. Do not require a `gemini` binary when using AGY. Read the [host troubleshooting guide](skills/backend-to-ui/references/host-compatibility.md) for exact paths and precedence.
+
+## Efficient workflow, optional subagents and live testing
+
+The skill uses a **risk-first, progressive-disclosure workflow**: inspect only affected files, reuse existing tokens and components, run focused checks before broader suites, and keep reports concise. It loads [lean-workflow.md](skills/backend-to-ui/references/lean-workflow.md) only as needed.
+
+**Subagents / agent swarm are never automatic.** For a sufficiently large task with independent workstreams and an actual available tool, the agent asks once whether to parallelize. Users can keep a single agent to minimize token usage. [Parallel execution policy](skills/backend-to-ui/references/parallel-work.md). AGY documents `/swarm`, but use it only after explicit opt-in; not every host has equivalent tools.
+
+**Live browser QA** uses the existing browser, Chrome DevTools/CDP, Playwright, browser-agent or supported plugin **when available**, with actual navigation, interactions, console/network checks, and desktop/mobile screenshots. No fabricated success when the host lacks tools. [Live-browser protocol](skills/backend-to-ui/references/live-browser.md).
 
 ## What it does
 
@@ -86,7 +97,7 @@ python3 skills/backend-to-ui/scripts/doctor.py --host gemini-cli --strict --json
 
 **Works with existing frontends even if no backend is present.** React, Vue, Angular, Svelte, Next/Nuxt, server templates, WordPress, HTMX, native HTML, Flutter, SwiftUI and other stacks are supported as project-specific engineering workflows—not as a blanket claim that every combination has been benchmarked.
 
-The workflow is **inspect → understand → map → compare two design compositions → implement → test → inspect actual screenshots → fix**. One-shot means one request can trigger the complete process *after* a frontend-stack choice is resolved.
+The workflow is **scope → inspect relevant files → preserve existing identity or select a new direction → implement → run focused tests → live browser QA → correct**. New designs compare competing compositions; small fixes reuse the existing direction. One-shot means one request can trigger the complete process *after* a frontend-stack choice is resolved.
 
 ## Project structure
 
@@ -105,6 +116,9 @@ skills/backend-to-ui/
     verify.md                # Functional/release checks
     design-contract.md       # Cross-agent design authority
     host-compatibility.md    # Host discovery and activation
+    lean-workflow.md         # Token-efficient, risk-first workflow
+    parallel-work.md         # User-approved optional subagent execution
+    live-browser.md          # Browser, DevTools, and interactive QA
   assets/UI_CONTRACT.example.json
   scripts/check_contract.py
   scripts/doctor.py
@@ -119,7 +133,7 @@ python3 tests/validate.py
 python3 -m unittest discover -s tests -p 'test_*.py' -v
 ```
 
-These checks validate repository integrity, design-contract schema rules, filesystem host discovery, and evaluation rules—not actual UI quality or agent activation across coding agents. Real acceptance requires representative source repositories, browser/device screenshots, interaction checks and measured network/render traces. Missing evidence is **inconclusive**, not a pass. See [evaluation protocol](evals/README.md) and [visual gates](skills/backend-to-ui/references/visual-review.md).
+These checks validate repository integrity, design-contract schema rules, host install paths, workflow guardrails and evaluation rules—not live UI quality, token reduction, or agent activation across coding agents. Real acceptance requires representative source repositories, browser/device screenshots, interaction checks and measured network/render traces. Missing evidence is **inconclusive**, not a pass. See [evaluation protocol](evals/README.md) and [visual gates](skills/backend-to-ui/references/visual-review.md).
 
 To contribute, open an issue or PR with a clear reproduction and evidence. Read [CONTRIBUTING.md](CONTRIBUTING.md) and [SECURITY.md](SECURITY.md). Releases must update [CHANGELOG.md](CHANGELOG.md), run the commands above, record real evaluation limitations, and tag the merged `main` commit.
 

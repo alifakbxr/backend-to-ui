@@ -1,49 +1,63 @@
-# Project design contract — cross-agent source of truth
+# Design authority and portable project contract
 
-**Purpose:** ensure Codex, Claude Code, Gemini CLI, ChatGPT, and Antigravity do not replace a project's identity with model-specific taste. A shared, versioned \`UI_CONTRACT.json\` lives at the **target project's root**, not inside this skill repository. Its contents are project-specific. The bundled example is only a **schema illustration**, never a palette, layout, or UI template.
+A skill is **a workflow, not a visual preset**. AGY, Gemini, ChatGPT, Claude and Codex should follow the *same project decisions*; they need not produce identical pixels.
 
-## Precedence, in order
+## Order of authority
 
-1. Explicit **current user request** (including deliberate redesign and constraints).
-2. Previously **reviewed project contract** that the user has accepted.
-3. Real existing brand assets, UI tokens, components and behavior in the project.
-4. Evidence from product documents, domain content, workflows and users.
-5. Research and established task-specific UX patterns.
-6. Agent or model defaults: **never a source of visual authority**.
+1. Current explicit user direction (including a requested rebrand or removal).
+2. Previously **user-approved** `UI_CONTRACT.json` and approved brand guidelines.
+3. Existing project tokens, components, logo, content, route flows and screenshots.
+4. Product tasks, real data and domain conventions.
+5. Provisional design proposals grounded in evidence.
+6. Model/host aesthetic defaults: **no authority**.
 
-If sources conflict, explain the conflict and update the contract after the user's explicit direction. Don't silently average two identities together. A project with no established brand can use a **provisional direction**; disclose it and retain the contract so later agents reuse the same recorded decisions. Never label inferred directions "approved".
+If a user asks to change a previously approved look, do not resist: the current request wins. Avoid changing things outside the requested scope.
 
-## Workflow
+## When to create `UI_CONTRACT.json`
 
-1. **Read before writing UI code.** Use the existing \`UI_CONTRACT.json\` if one exists. For existing projects without it, inspect component library, tokens, app shell, routes, real data and screenshots; source an initial contract from those observations. This is *adoption*, not an automatic rebrand.
-2. **Honor frontend stack choice gate first.** No new UI files or contract writing until the stack is explicitly selected or reuse authorized. Read-only audit may inspect the contract without editing.
-3. **Record concise data** matching [example contract](../assets/UI_CONTRACT.example.json):
-   - Product: name, surface mode, primary user and task.
-   - Frontend: selected stack and confirmation method.
-   - Design: status (\`approved\` or \`provisional\`), provenance, the dominant subject, density, composition and precise, project-grounded visual decisions.
-   - Preservation: concrete routes, components, state, permission-sensitive flows.
-   - Options: two distinct compositions considered when choosing a **new** direction. If an approved composition already exists, reuse it; don't regenerate two alternatives on every turn.
-   - Evidence: specific sources for factual and aesthetic decisions (file path, current user instruction, or labeled inference).
-4. **Validate** using \`python3 <skill-dir>/scripts/check_contract.py --contract <project>/UI_CONTRACT.json --project-root <project>\`. File-backed references must stay inside the project; \`inference:\` sources require provisional status.
-5. **Apply** contract to the target UI. Never treat the example's aesthetics as defaults. Don't replace existing framework or make a parallel app.
-6. **Review** desktop/mobile renders and working flows. The JSON validator checks *structure and provenance*, not beauty. A human/browser-based review remains essential.
+**Always read** an existing one before frontend edits. For read-only audits, do not write anything. For targeted fixes (bug, one component, spacing, form validation), do not force a new contract. For a new design or substantial ongoing redesign, persisting one is useful for repeatable cross-agent work; ask approval if writing it would be outside requested scope. Never place generated design files in an unrelated repository or claim the user approved a direction they have not seen.
 
-## Anti-slop decisions that must be justified
+The contract is stored in the *target project root*. [Example structure](../assets/UI_CONTRACT.example.json) is **not a UI template**. Do not copy the example's product, user, task or composition.
 
-- What is the first meaningful user action? Where is it visible?
-- Why does this composition fit *this* domain and device?
-- What visual material is native to this product? Does art genuinely help?
-- Is blank space giving attention or hiding an undersized task?
-- Is every number anchored to real data and an actual decision?
-- Does content density serve reading, operating, playing, exploring or creating?
-- Could a stranger swap the logo and reuse the page as another product? If so, revisit composition.
+## Status means something
 
-Use **Tell → Why → Fix** for specific problems. Avoid global "no cards/no gradients/no Inter" rules; these could damage legitimate existing brands.
+- `approved`: direction explicitly approved by the current user; must cite a `user:` source. A repo file alone cannot grant approval.
+- `observed`: direction extracted from an actual existing project file, with a `file:` source. Preservation default, **not user approval**.
+- `provisional`: tentative, source-labeled proposal. `inference:` sources cannot become approved without a user instruction.
 
-## Deterministic versus subjective checks
+Evidence entries may separately include facts and inferred assumptions; *only the direction's source* controls its approval status. Don't prohibit all inference from a reviewed project just because an unrelated statement remains uncertain.
 
-**Machine-checkable:** contract schema, explicit source provenance, missing required fields, unresolved composition, references outside root, and whether a purportedly approved contract cites an inference.
+## Design decision procedure
 
-**Requires actual agent/browser QA:** visual originality, usable proportions, interaction clarity, contrast rendering, touch behavior, animation performance and task completion. Never label these passed from a lint result alone.
+1. Determine the product's **actual user, activity and device**. A landing page and operations console have different tasks even for the same product.
+2. Identify existing color tokens, type scales, layout conventions, logo/assets, UI copy and component contracts; list file paths, not invented brand hex codes.
+3. If an existing design is established and not being replaced, preserve its recognizable identity and flow.
+4. If selecting a **new** direction, compare two *structurally different* compositions. A list/detail view and an immersive full-canvas editor are different; recoloring a generic 3-column card layout is not.
+5. Record the selected composition, its **dominant subject**, density, task rationale and **specific provenance**. Avoid invented user approval.
+6. Implement in the already authorized stack, then inspect real rendered screenshots and interactions.
+7. On negative feedback, diagnose hierarchy and structural fit first; correct the contract direction deliberately when the user requests it.
 
-**Cross-agent repeatability protocol:** reuse the **same git commit + same UI_CONTRACT.json SHA**, same target repo/data fixtures, same prompt and same acceptance criteria across host runs. Compare screenshots and actual diffs; report model-specific deviations instead of hiding them.
+## Anti-slop diagnosis: tell → why → fix
+
+| Tell | Why it fails | Direction for the fix |
+| --- | --- | --- |
+| Generic hero + stats + identical cards regardless of product | Imported marketing/dashboard shell hides the real activity | Rebuild hierarchy around the actual user task |
+| Charts and KPIs with no authorized backing source | Makes fictitious data look authoritative | Remove, or derive from verified backend contracts with period/units |
+| Buttons, pills or icons that never do anything | Simulates completeness without behavior | Wire real actions and meaningful empty/error/mutation states |
+| Contradictory brand typography/color/spacing | Agent preferences override actual project identity | Reuse project tokens/assets and record the design source |
+| Large vacant viewport around a tiny central task | Incorrect use of canvas and information density | Give the primary work the needed scale and space |
+| Same section order across unrelated products | Template selection precedes product understanding | Rethink composition, content sequence and core affordances |
+
+Cards, gradients, dark mode, bright colors, Inter or animations are **not inherently forbidden**. Judge purpose, coherence, execution, accessibility, and brand fit instead of banning a style.
+
+## Contract validation
+
+```bash
+python3 <skill-dir>/scripts/check_contract.py --contract ./UI_CONTRACT.json --project-root .
+```
+
+The script validates **schema and provenance only**. It cannot measure originality, usability, aesthetics or adherence to brand without real screenshots and judgment. When not available, inspect the contract manually and mark validation as unverified.
+
+## Cross-agent acceptance
+
+Keep project git SHA, skill version, contract SHA, prompt and fixture data constant. Inspect **actual files, screenshots and user flows** from each host. The existing `evals/compare_agents.py` compares reported records and fingerprints but does not authenticate agent activation or screenshots.

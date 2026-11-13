@@ -26,7 +26,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        host: [antigravity, gemini-cli]
+        host: [antigravity-cli, antigravity, gemini-cli]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
