@@ -1,0 +1,38 @@
+name: Verify real Skills CLI installation
+
+on:
+  push:
+    branches: [feat/new-smooth-intro-video-gif]
+    paths:
+      - .github/workflows/install-proof.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  install:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22.20.0'
+      - name: Install backend-to-ui in isolated runner
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/skill-install-probe"
+          cd "$RUNNER_TEMP/skill-install-probe"
+          echo '$ npx skills add alifakbxr/product-ui --skill backend-to-ui -a codex -g -y' | tee "$RUNNER_TEMP/install.log"
+          npx --yes skills add alifakbxr/product-ui --skill backend-to-ui -a codex -g -y 2>&1 | sed -r 's/\x1B\[[0-9;]*[mK]//g' | tee -a "$RUNNER_TEMP/install.log"
+          echo '$ npx skills list -g' | tee -a "$RUNNER_TEMP/install.log"
+          npx --yes skills list -g 2>&1 | sed -r 's/\x1B\[[0-9;]*[mK]//g' | tee -a "$RUNNER_TEMP/install.log"
+          grep -q 'backend-to-ui' "$RUNNER_TEMP/install.log"
+          grep -q 'alifakbxr/product-ui' "$RUNNER_TEMP/install.log"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: backend-to-ui-real-install-log
+          path: ${{ runner.temp }}/install.log
+          retention-days: 7
