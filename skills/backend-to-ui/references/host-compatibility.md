@@ -1,57 +1,68 @@
-# Host activation and discovery — not just installed files
+# AGY / Antigravity and legacy Gemini CLI — discovery vs activation
 
-A successful \`npx skills add\` or \`npx skills list -g\` **does not prove** the app/CLI loaded or activated \`backend-to-ui\`. Treat these as separate checks:
+**Use the right executable.** Antigravity CLI is `agy`. It does **not** support the shell command `agy skills list --all`; use `/skills` and `/skills reload` **inside interactive AGY**. A missing `gemini` binary does not mean `agy` is broken. Do not install legacy Gemini CLI just to use AGY.
 
-1. **Installed on disk:** required \`SKILL.md\` and references are present.
-2. **Discovered by the host:** it appears in the host's skill inventory, from the expected folder, without a stale higher-priority copy.
-3. **Activated for the task:** invocation was accepted and the agent reads the correct \`SKILL.md\`. An observed design alone cannot prove this.
-4. **Followed correctly:** the agent used the project contract, obeyed stack selection and produced verifiable implementation+QA evidence.
+An installer completion message is not proof of agent activation. Four independent stages: **installed on disk → discovered in host → activated for task → instructions followed**. Report the latter stages `unverified` without real host evidence.
 
-## Verified host locations
+## Install (explicit agent target)
 
-| Host | Global skill path | Host-side verification |
-| --- | --- | --- |
-| Antigravity App / IDE | \`~/.gemini/config/skills/backend-to-ui/SKILL.md\` | Customizations → Installed; \`/backend-to-ui\` |
-| Antigravity CLI | Same shared global path (plus CLI-only alternate directories) | \`/skills\` then \`/skills reload\`, invoke \`/backend-to-ui\` |
-| Gemini CLI | \`~/.gemini/skills/backend-to-ui/SKILL.md\` or \`~/.agents/skills/backend-to-ui/SKILL.md\` | \`/skills list\`, \`/skills reload\`, enable if disabled |
-| Codex | \`~/.agents/skills/backend-to-ui/SKILL.md\` | Confirm skill inventory/invocation in current Codex session |
-| Workspace (Antigravity/Gemini) | \`<project>/.agents/skills/backend-to-ui/SKILL.md\` | Check workspace trust, current directory, reload and precedence |
+```bash
+# AGY / Antigravity CLI
+npx skills add alifakbxr/product-ui --skill backend-to-ui --agent antigravity-cli -g -y
+# Antigravity IDE if used
+npx skills add alifakbxr/product-ui --skill backend-to-ui --agent antigravity -g -y
+```
 
-These paths and commands follow official host docs and can change. Workspace/extension skills can override user-level skills with the same name. Antigravity App **does not** read all Antigravity CLI-only folders; place a shared skill in \`~/.gemini/config/skills/\`.
+AGY and the IDE share the preferred global path:
+`~/.gemini/config/skills/backend-to-ui/SKILL.md`
 
-## Install explicitly per host
+Workspace skills live at `<workspace>/.agents/skills/backend-to-ui/SKILL.md`. AGY also accepts CLI-only locations `~/.gemini/antigravity-cli/skills/` and `~/.gemini/skills/`. The IDE supports `~/.gemini/antigravity/skills/` as a legacy path; don't assume CLI-only locations apply to the IDE.
 
-\`\`\`bash
-npx skills add alifakbxr/product-ui --skill backend-to-ui --agent antigravity -g
-npx skills add alifakbxr/product-ui --skill backend-to-ui --agent gemini-cli -g
-\`\`\`
+**The universal `~/.agents/skills/backend-to-ui` global alias is not the documented AGY global path.** A generic installer choosing only that path is not proof of discovery.
 
-Use \`npx skills add alifakbxr/product-ui --list\` to confirm source discovery.
+## Verify on disk, then inside the host
 
-After install, **diagnose** on disk using the repository's zero-dependency script:
+From a clone of `product-ui`:
 
-\`\`\`bash
-python3 skills/backend-to-ui/scripts/doctor.py --host all
+```bash
+python3 skills/backend-to-ui/scripts/doctor.py --host antigravity-cli --strict
 python3 skills/backend-to-ui/scripts/doctor.py --host antigravity --strict
-python3 skills/backend-to-ui/scripts/doctor.py --host gemini-cli --strict --json
-\`\`\`
+```
 
-The checker compares all known candidate copies (including workspace and legacy locations), file metadata and optional comparison to the repository source. It detects stale duplicates and missing preferred paths. It **never invokes a proprietary host**, never changes your HOME, and never asserts that host activation happened. The \`--strict\` status only means **filesystem discovery checks passed**.
+Open `agy` and, in the interactive UI, run:
 
-## If skill doesn't appear
+```text
+/skills reload
+/skills
+/backend-to-ui
+```
 
-- **Antigravity IDE/App:** verify \`~/.gemini/config/skills/backend-to-ui/SKILL.md\`, then Customizations → Installed. Other global paths may be ignored in the IDE.
-- **Antigravity CLI:** run \`/skills reload\`. Run \`/skills\` to inspect the actual path and its loaded instructions.
-- **Gemini CLI:** run \`/skills reload\`, then \`/skills list\`. If disabled, \`/skills enable backend-to-ui\`. Workspace skills require a trusted workspace; check \`/trust\`.
-- **Multiple copies:** inspect them via \`doctor.py\`. Remove or reconcile duplicates *manually*; no automatic deletion.
-- **Activates but ignores rules:** capture the exact agent/version, path, skill SHA, user prompt, contract SHA and actual diff. Report which step was omitted. Do not infer compliance from visual resemblance.
+Check the loaded version and content, not just skill name. In Antigravity IDE, inspect Customizations and invoke `/backend-to-ui`. The CLI slash command list may need `/skills reload` after installation.
 
-## Acceptance
+If absent, confirm explicit `--agent antigravity-cli`, the global path, current workspace, higher-precedence `.agents/skills/` copies and stale metadata. The read-only doctor locates files, compares hashes and flags conflicts; it does not launch AGY or verify activation.
 
-Report a matrix with \`installed\`, \`host_discovered\`, \`activated\`, \`contract_used\`, and \`QA_evidence\` for each host. Mark values \`unverified\` unless actually observed. Passing \`doctor.py\` is **not** passing this full matrix.
+## Optional legacy Gemini CLI
+
+Only if the user actually runs `gemini`, install explicitly:
+
+```bash
+npx skills add alifakbxr/product-ui --skill backend-to-ui --agent gemini-cli -g -y
+python3 skills/backend-to-ui/scripts/doctor.py --host gemini-cli --strict
+```
+
+Gemini CLI recognizes `~/.gemini/skills/` and `~/.agents/skills/` and uses interactive `/skills list` and `/skills reload`. These are separate host commands, not aliases of `agy skills list`.
+
+## Optional swarm/agent parallelism
+
+AGY documents interactive `/swarm <task>` and plan-dependent `/teamwork <task>`. **Do not execute either without explicit opt-in** and first confirm the current AGY session exposes the command. See [parallel-work.md](parallel-work.md) for scope, cost and integration rules. Other hosts may expose different tools or none.
+
+## Diagnostic report semantics
+
+`doctor.py --strict` fails for missing expected files or malformed/stale conflicting copies. It can warn about legacy duplicates. Report separate statuses for `installed_on_disk`, `host_discovered`, `activated` and `instructions_followed`. Unobserved stages are `unverified`.
 
 Sources:
 - https://antigravity.google/docs/skills?app=antigravity
-- https://antigravity.google/docs/customization-discovery/
+- https://antigravity.google/docs/customization-discovery?tab=cli
+- https://antigravity.google/docs/cli/reference
 - https://geminicli.com/docs/cli/skills/
 - https://github.com/vercel-labs/skills/blob/main/docs/agents.md

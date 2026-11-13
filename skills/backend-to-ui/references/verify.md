@@ -1,6 +1,13 @@
 # Verification: engineering and visual quality
 
-A skill instruction can ask for quality but cannot guarantee it. **Claims must match observed evidence.** Run available checks, capture screenshots where possible and report limitations explicitly.
+A skill instruction can ask for quality but cannot guarantee it. **Claims must match observed evidence.** Run targeted tests first; use a real browser via DevTools, Playwright, an available browser agent or plugin for stateful UI work when possible (see [live-browser.md](live-browser.md)). Capture screenshots and actual interactions, and report limitations explicitly.
+
+## Risk-first testing sequence
+
+1. Run the **smallest affected** unit/type/build check first; reuse existing tooling rather than adding a new browser framework.
+2. If UI behavior, rendering, data or navigation changed, run live browser checks for the primary flow plus relevant failure/mutation states, inspect console/network and desktop/mobile screenshots.
+3. Broader full-suite tests are warranted for shared architecture, auth, routing, data or major redesign changes—not every copy-only change.
+4. On failure, fix and repeat only affected checks, then ensure final integration does not regress. Never replace evidence with a simulated log.
 
 ## Functional acceptance
 

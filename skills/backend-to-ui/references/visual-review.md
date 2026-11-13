@@ -4,7 +4,7 @@
 
 ## Contract-aware review
 
-Before judging a screenshot, read the project's `UI_CONTRACT.json`. Evaluate **the product-specific direction that was recorded**, not the taste of the current model. If an existing brand is user-approved, preserve it; if the design is provisional, distinguish observations from creative choices. No lint script can certify that a UI is visually excellent.
+If `UI_CONTRACT.json` exists, read it before evaluating the screenshot; otherwise inspect actual brand tokens and existing product UI. Evaluate **the task-specific direction**, not the current model's taste. If an existing brand is approved, preserve it; if provisional, distinguish observations from creative choices. No lint script can certify that a UI is visually excellent. Use [live-browser.md](live-browser.md) for real interaction and DevTools evidence.
 
 ## Review sequence
 

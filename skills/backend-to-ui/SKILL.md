@@ -1,84 +1,61 @@
 ---
 name: backend-to-ui
-description: Build, redesign and improve existing frontends in any framework or build UI from real backends, APIs and page props. Use for frontend-only apps, established projects, backend-to-frontend integration, visual UX audits, data-heavy screens and one-shot implementation. Preserve architecture, brand and behavior; verify real user flows, accessibility and rendering performance.
+description: Build, redesign, audit or improve a real product frontend using its existing stack or actual backend contracts. Use for existing frontend, frontend-only, full-stack and backend-to-UI work; preserve brand and behavior, prevent generic AI templates, verify interactions in a live browser, and optionally offer subagent parallelism.
 license: MIT
 metadata:
-  version: "1.4.0"
+  version: "1.5.0"
 ---
 
 # Backend to UI
 
-Build **product-specific interfaces** for existing frontend apps or backend-only projects. Existing React, Vue, Angular, Svelte, server-rendered, native and unfamiliar frameworks are first-class targets. Preserve what works; do not turn a mature application into a generic remake. When a backend exists, its contracts define what the UI can actually do.
+Create a useful product interface **from the real user's task**, never from the host agent's preferred UI aesthetic. The model and agent host have **zero design authority**. Preserve the existing stack, brand, data, architecture and working user flows unless the user explicitly requests a change.
 
-## How to work
+## Load only what the task needs
 
-One request should run end-to-end when the repository and tools permit, **after the required frontend stack is selected**. Do not stop at a plan or mockup. Keep the existing stack, auth and brand. Ask only about true blockers or high-risk changes **except the mandatory frontend stack decision below**; label reasonable product assumptions instead of inventing facts.
+When this skill is invoked, actually read this file; installation alone does not prove activation. Use **progressive disclosure** to reduce token use: for frontend edits read [stack selection](references/stack-selection.md) and [design contract](references/design-contract.md). Then read only task-relevant references: [existing frontend](references/existing-frontend.md), [backend data](references/data.md), [performance](references/performance.md), [design](references/design.md), [stacks](references/stacks.md), [visual review](references/visual-review.md) or [verification](references/verify.md). [Product cases](references/cases.md) are contrasts, **not copyable templates**.
 
-## Host-neutral design authority and activation
+Follow [lean workflow](references/lean-workflow.md): inspect relevant routes/files once, maintain a short task ledger, avoid duplicate analysis and redundant full-repo reads, reuse project tools, run focused checks before expensive checks, and report evidence briefly. **Do not sacrifice data security or functional testing for token savings.**
 
-The skill name is `backend-to-ui` in every host. When explicitly invoked, **read this SKILL.md and the required references**, not the host's preferred UI examples. Do not claim the skill was used unless its instructions were actually loaded. For activation diagnostics follow [host compatibility](references/host-compatibility.md); file installation is not proof of host activation.
+## Mandatory frontend stack gate
 
-Before any UI code edit, read [design-contract.md](references/design-contract.md). Use **the project's** `UI_CONTRACT.json` if present; validate it with `python3 <skill-dir>/scripts/check_contract.py --contract UI_CONTRACT.json` when Python exists. Order of authority: current explicit user request → reviewed project design contract → observed existing brand/components/design tokens → project/product evidence → documented task-specific conventions. **The model's or agent host's own aesthetic preferences have zero design authority.**
+Before implementation or redesign, require an explicit frontend-stack choice or explicit authorization to reuse the already-detected stack. Otherwise **ask one direct question** and do not edit frontend files until answered. **Never silently fall back to native HTML**, React, Vue or anything else. A read-only audit needs no stack approval. See [stack-selection.md](references/stack-selection.md).
 
-On a first run with no contract, inspect the project and record the direction in `UI_CONTRACT.json` (template: [UI_CONTRACT.example.json](assets/UI_CONTRACT.example.json)) **after stack approval**. Mark decisions that lack user/brand support as `provisional`, with evidence and assumptions. Do not fabricate brand tokens, invent approvals or silently replace existing product identity. Reuse a previously approved contract without re-designing it on every invocation. When explicit feedback changes direction, update and validate the contract deliberately, rather than layering new preferences on top.
+## Design authority and anti-slop
 
-## Mandatory frontend stack gate (before editing UI files)
+Current explicit user request → user-approved project `UI_CONTRACT.json` → observed existing brand/components/tokens → product evidence → domain conventions. Agent preferences are not evidence.
 
-If implementation or redesign is requested, read [stack decision policy](references/stack-selection.md) **before changing frontend code**.
+If `UI_CONTRACT.json` exists, read it before UI changes. If not, preserve existing design sources; for a *substantial new design*, record a source-backed `provisional` contract when useful, not a forced JSON document for a small fix. An `approved` contract requires explicit user approval; an `observed` direction comes from actual project files. Validate recorded provenance using `scripts/check_contract.py` when available. See [design-contract.md](references/design-contract.md).
 
-- If the user explicitly names a frontend stack (including plain/native HTML/CSS/JS), use it unless incompatible with hard repository constraints; explain any conflict.
-- If the user explicitly authorizes **reuse of the existing frontend stack** and one is reliably detected, proceed with that stack.
-- If no stack is specified or authorized, **ask one direct question**. If the repo uses Vue + Inertia, for example: "I found Vue + Inertia. Should I continue with it, or use another frontend stack?" If no frontend is present: "Which frontend stack should I use?"
-- **Do not create or modify frontend implementation files before the answer. Never silently fall back to native HTML/CSS/JavaScript, React, Vue or any other framework.** Backend language, a JSON endpoint, and a package manager alone are not frontend-stack consent.
-- A read-only audit may proceed without this question; ask before subsequently implementing changes. Once the stack is confirmed, perform remaining steps autonomously and only ask again for a genuine blocker.
+For a **new** direction compare **two materially different compositions** by user workflow and information hierarchy, not color swaps. Reuse an existing approved composition for small changes. Reject fake KPIs, card spam, decoration hiding the main task, nonfunctional controls and interchangeable dashboard shells. Gradients/cards/bright colors can be correct when justified by the product, not as automatic defaults.
 
-**One-shot** means one request can complete the implementation when the stack decision is already resolved; it does not override this explicit user-choice gate.
+## Optional parallel execution — ask, don't assume
 
-1. **Inspect.** Verify the frontend stack gate. Choose the work mode: **existing frontend**, **backend-only**, **integrate frontend and backend**, or **read-only audit**. For existing UIs, inspect entry points, routes, shared components, theme/tokens, styles, state owners, data adapters, existing tests, assets and responsive behavior before editing. Read [existing frontend playbook](references/existing-frontend.md). If there is a backend, inspect routes/handlers, schemas, policies, response shapes, pagination and errors; read [data contracts](references/data.md). Never invent backend actions or metrics.
-2. **Understand.** Identify the real user, job, device, environment, emotional expectation and **product mode**: operate, explore, play, create, read or persuade. Separate observed facts from assumptions. Do not infer the information architecture from database table names. Read [design direction](references/design.md).
-3. **Map.** Document the user flow and what must **remain working** (navigation, component contracts, state, tests and current data flows). If a backend is available, map actions to authorized handlers, fields, states and recovery. In frontend-only apps, use actual local state, fixtures and documented integrations; do **not** fabricate an API. Preserve SSR, native, Inertia, GraphQL and other patterns already used.
-4. **Plan for speed.** Trace the **real pipeline**: backend query → transport → client state → render when applicable, or local state → derived state → render for standalone frontends. Preserve efficient existing patterns; apply pagination, cache scope, request deduplication, cancellation/race safety and bounded rendering when relevant. Read [performance](references/performance.md).
-5. **Art direct.** Consult the reviewed `UI_CONTRACT.json`. If a composition is already approved and the user has not requested a rebrand, **reuse it without inventing alternatives**. Otherwise compare **two materially different compositions** for the product, select the task-appropriate one, and record the rationale, status, source and preservation scope in `UI_CONTRACT.json`. Define the dominant subject or task, visual hierarchy, density, typography, color roles, assets and motion. Be specific to the domain, not a default dashboard skin. See [product examples](references/cases.md). Never use large blank desktop margins to hide a phone-sized UI unless that presentation is explicitly the product.
-6. **Build.** For an existing frontend, improve it **incrementally in its own framework**: reuse component APIs, routing, styling conventions, state libraries and accessible patterns. Avoid unnecessary replatforming, new dependencies, design-system replacement or regression of unrelated flows. For backend-only projects, implement the explicitly chosen stack. Complete the main user flow and its real states. Give the primary interaction an appropriate share of screen space and visual prominence. Make controls legible and functional; provide loading, empty, error, retry, validation, permission and mutation states where relevant. Do not add decorative complexity in place of useful content.
-7. **Test, critique, fix.** Validate `UI_CONTRACT.json`, run available tests and inspect **actual rendered desktop and mobile screenshots** (plus an intermediate width when possible). Apply [visual review gates](references/visual-review.md) and [functional verification](references/verify.md). If a serious gate fails, **change the design and review again**; do not stop at a CSS tweak or report success based only on a passing build. Test real data timing and request races. If render tools are unavailable, report visual QA as unverified rather than asserting it passed.
-8. **Deliver.** Describe what the user can do, real contracts used, the design contract status/source, notable visual correction(s), performance controls, tests actually run and outstanding risks. Include the skill version and which checks actually ran; don't claim host activation, screenshot inspection or cross-agent consistency without evidence. Documentation proportional to the project; no required paperwork for its own sake.
+If the host **actually supports subagents/swarm** and a task has at least two independent workstreams, **offer a single optional question**: *"Mau saya gunakan subagent/agent swarm agar beberapa pekerjaan berjalan paralel, atau tetap satu agent yang lebih hemat token?"* Explain that parallelism can use **more total tokens**, although it may finish sooner. Do not launch or imply any subagent without explicit opt-in. Don't ask for trivial/tightly coupled tasks or when the host has no tool. Resolve any mandatory stack question first. If declined, continue alone; don't ask again. Follow [parallel-work.md](references/parallel-work.md) for isolated ownership, short context packets and one coordinator. On AGY CLI, `/swarm` and plan-dependent `/teamwork` exist **inside AGY**, not as generic shell subcommands.
 
-## Portable output contract
+## Work cycle
 
-Before edits: report `work_mode`, `frontend_stack`, `contract_status`, `primary_user`, `primary_task`, `preserve`, and `selected_composition` (with its observed source or explicit provisional assumption). No long document is required when these fit a short note.
+1. **Inspect.** Choose audit-only, existing frontend, frontend-only, backend-only or integration mode. Inspect only relevant routes, components, design tokens, state, auth, permissions, fixtures, tests and the primary user flow. Don't scan unrelated code without reason.
+2. **Understand.** Identify user, device, primary job and **product mode** (operate, explore, play, create, read, persuade). Separate observed, inferred and unknown facts; define the first meaningful action.
+3. **Map.** Document the smallest preservation/data map: existing route/role/state boundaries, real backend handlers and response/error shapes where available, or actual local state for frontend-only work. No invented APIs, metrics or permissions.
+4. **Plan for speed.** Choose backend → transport → state → render, or local state → render. Apply pagination, request deduplication/race safety, bounded rendering and caching only where relevant. Avoid needless dependencies and multiple data owners.
+5. **Art direct.** Reuse approved visual identity. If the user requested a new direction, compare the competing compositions, select one using evidence, choose task-driven hierarchy, density, typography, assets and motion. Don't default to a generic SaaS layout.
+6. **Build.** Make the smallest correct changes in the authorized stack and existing components. Complete visible interactions, accessible semantics, mobile/touch paths, loading/empty/error/retry/validation and mutation feedback as applicable.
+7. **Test, critique, fix.** Run affected code tests, then use an **actual live browser or DevTools** when available: Playwright, CDP/Chrome DevTools, browser agent or existing browser plugin. Follow [live-browser.md](references/live-browser.md). Exercise the user journey, inspect console/network failures and **actual rendered desktop and mobile screenshots**; fix stop-ship issues and retest. For native apps use native UI tools. If unavailable, explicitly mark live testing **unverified**—never invent traces or screenshots.
+8. **Deliver.** Briefly state changed files, preserved behavior, design source/status, real tests/viewport evidence, performance observations and unverified gaps. Claim activation, host compatibility or token savings only when actually verified.
 
-After edits: report `changed_files`, `preserved_flows`, `functional_tests`, `visual_evidence`, `performance_evidence`, `unverified` and `skill_version`. A build passing does not satisfy visual QA.
+## Stop-ship criteria
 
-## Hard gates
+- **Stack:** no frontend edits before the mandatory choice; no surprise replatforming.
+- **Brand:** no agent-designed replacement for a user-approved identity.
+- **Backend:** displayed data/actions are real or clearly labeled fixture; enforce real permissions.
+- **Experience:** dominant product task visible and appropriately sized; no fake UI functionality.
+- **Quality:** severe product-fit, accessibility, interaction, responsiveness or visual composition defects require correction, not just recoloring.
+- **Evidence:** passing build or contract validation is **not** live browser QA or proof of aesthetic quality.
 
-- **Design authority truth:** approved project decisions outrank the agent's taste; missing sources are provisional, not invented facts; never re-skin an approved design without user authorization.
-- **Stack truth:** explicit choice or explicit reuse authorization is required before frontend implementation; detected stack alone is not permission. Never default to native HTML.
-- **Existing frontend truth:** do not silently replace existing frameworks, routes, component contracts, state management, design system, localization, theming or working flows. Preserve and verify regressions.
-- **Backend truth:** when a backend exists, do not fabricate data, actions or permission checks. When it does not, do not invent a backend or require one to improve UI.
-- **Product truth:** screen hierarchy must express the product's defining action or subject. A playful game, a dense operations queue and a medical record must not receive the same page shell.
-- **Composition truth:** do not ship a tiny central app surrounded by unused desktop canvas, uniform card grids, repeated pill badges or layers of chrome unless they genuinely serve the task.
-- **Craft truth:** typography, proportion, assets, spacing, color and motion must form one coherent direction. Avoid gradient/glass/neon/rounded-card defaults; these are allowed only when supported by the product's visual world and executed with care.
-- **Interaction truth:** all visible affordances work; important events have feedback; motion respects reduced-motion preferences and performance.
-- **Evidence truth:** screenshot critique requires a screenshot, performance claims require measurements, live API claims require live requests. One-shot means one user prompt, **not** one unreviewed visual pass.
+## Reporting contract (keep concise)
 
-## References (read when needed)
+Before edits: `mode · selected stack/consent · primary task · preservation constraints · design source`. After edits: `changed files · working flows · checks actually run · rendered evidence · unverified`. Don't produce a long strategy memo for a small fix.
 
-- [design-contract.md](references/design-contract.md) — project identity, provenance, review and lock semantics
-- [host-compatibility.md](references/host-compatibility.md) — Antigravity/Gemini installation and activation checks
-- [stack-selection.md](references/stack-selection.md) — mandatory stack choice and one-shot behavior
-- [existing-frontend.md](references/existing-frontend.md) — safe modernization of any existing frontend
-- [data.md](references/data.md) — real contracts, permissions, state handling
-- [performance.md](references/performance.md) — efficient data pipeline, rendering, cache and races
-- [design.md](references/design.md) — product modes and evidence-based visual direction
-- [cases.md](references/cases.md) — contextual examples including arcade, operations and reading
-- [visual-review.md](references/visual-review.md) — stop-ship visual gates and screenshot iteration
-- [stacks.md](references/stacks.md) — stack-specific integration choices
-- [verify.md](references/verify.md) — functional and evidence-based acceptance tests
+## Host check
 
-## Portable validation
-
-From a clone of this skill repository, run `python3 skills/backend-to-ui/scripts/doctor.py --host all` for **on-disk host discovery**, then confirm skill activation inside each host UI separately. The doctor never claims activation. On a user project run `python3 <skill-dir>/scripts/check_contract.py --contract <project>/UI_CONTRACT.json`. If Python is unavailable, manually follow the same documented checks and report that automation was unavailable.
-
-## Example trigger
-
-> Use backend-to-ui to build or improve this project's frontend. Understand its users and backend first. Create a distinctive interface, keep real data fast, inspect screenshots, fix generic design, and test the working flows.
+Antigravity CLI executable is `agy`, not `gemini`. For AGY/IDE install discovery and skill activation, see [host-compatibility.md](references/host-compatibility.md). From a cloned repository, `python3 skills/backend-to-ui/scripts/doctor.py --host antigravity-cli --strict` verifies files on disk, **not** activation inside AGY.

@@ -19,6 +19,7 @@ REQUIRED_DOCS = (
     "evals/score.py",
     "tests/test_evals.py",
     "tests/test_portability.py",
+    "tests/test_workflow_policy.py",
     "tests/test_compare_agents.py",
     "evals/compare_agents.py",
     ".github/workflows/validate.yml",
@@ -79,6 +80,11 @@ def main() -> None:
     # Regression gate: generic-skin redesigns must be explicitly blocked by skill guidance.
     check("product mode" in skill.lower(), "Skill must require product-mode analysis")
     check("UI_CONTRACT.json" in skill, "Skill must load project design contract")
+    check(len(skill) < 9000, "Keep SKILL.md lean; move task-specific details to references")
+    check("explicit opt-in" in skill.lower(), "Parallel agents require user opt-in")
+    check("live browser" in skill.lower(), "Main workflow must require live browser QA when available")
+    for relative in ("references/lean-workflow.md", "references/parallel-work.md", "references/live-browser.md"):
+        check((SKILL_DIR / relative).is_file(), f"Missing workflow reference: {relative}")
     check("zero design authority" in skill.lower(), "Agent taste must not override approved direction")
     check((SKILL_DIR / "scripts/doctor.py").is_file(), "Missing host discovery diagnostic")
     check((SKILL_DIR / "scripts/check_contract.py").is_file(), "Missing design contract validator")
