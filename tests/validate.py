@@ -16,6 +16,11 @@ REQUIRED_DOCS = (
     "CHANGELOG.md",
     "docs/USAGE.md",
     "docs/WORKFLOW.md",
+    "docs/RELEASE.md",
+    "evals/README.md",
+    "evals/scenarios.json",
+    "evals/score.py",
+    "tests/test_evals.py",
     "docs/PUBLISHING.md",
     ".github/workflows/validate.yml",
 )
@@ -74,6 +79,12 @@ def main() -> None:
 
     # Regression gate: generic-skin redesigns must be explicitly blocked by skill guidance.
     check("product mode" in skill.lower(), "Skill must require product-mode analysis")
+    check("mandatory frontend stack gate" in skill.lower(), "Missing mandatory frontend stack gate")
+    check("ask one direct question" in skill.lower(), "Missing ask-first requirement")
+    check("never silently fall back to native html" in skill.lower(), "Missing native HTML fallback prohibition")
+    policy = (SKILL_DIR / "references/stack-selection.md").read_text(encoding="utf-8").lower()
+    check("do not create or edit frontend implementation files until answered" in policy,
+          "Stack policy must forbid edits before approval")
     check("two materially different compositions" in skill.lower(), "Skill must require competing compositions")
     check("actual rendered desktop and mobile screenshots" in skill.lower(), "Skill must require render-based critique")
     visual = (SKILL_DIR / "references/visual-review.md").read_text(encoding="utf-8").lower()
@@ -92,8 +103,18 @@ def main() -> None:
     check(intro.is_file() and b"ftyp" in intro.read_bytes()[:32], "Introduction must be an MP4")
     check(intro.stat().st_size < 10_000_000, "Keep committed introduction video under 10 MB")
 
-    markdown_files = [ROOT / "README.md", ROOT / "SECURITY.md", ROOT / "CONTRIBUTING.md", *list((ROOT / "docs").glob("*.md")), skill_file, *refs]
+    markdown_files = [ROOT / "README.md", ROOT / "SECURITY.md", ROOT / "CONTRIBUTING.md",
+                      *list((ROOT / "docs").glob("*.md")), ROOT / "evals/README.md", skill_file, *refs]
     link_count = sum(check_link_targets(path) for path in markdown_files)
+
+    # The evaluator scenarios are consistency-checked separately by unittest.
+    import json
+    scenarios = json.loads((ROOT / "evals/scenarios.json").read_text(encoding="utf-8"))
+    check(scenarios.get("schema_version") == 1, "Unsupported evaluation schema")
+    cases = scenarios.get("scenarios", [])
+    check(len(cases) >= 15, "Not enough evaluation scenarios")
+    check({"ask_stack", "implement", "audit"}.issubset({c["expected"]["action"] for c in cases}),
+          "Missing stack/implementation/audit scenario classes")
 
     readme = (ROOT / "README.md").read_text(encoding="utf-8")
     check("[![Watch the introduction](media/cover.png)](media/intro.mp4)" in readme, "README must show a clickable video cover")

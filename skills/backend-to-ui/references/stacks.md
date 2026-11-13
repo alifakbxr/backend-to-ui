@@ -1,6 +1,6 @@
 # Adapt to the stack; don't replace it
 
-The correct frontend is the least disruptive implementation that meets the task.
+The correct frontend is the least disruptive implementation **within the frontend stack explicitly selected or authorized by the user**. See [stack-selection.md](stack-selection.md) before editing UI files. Detection never substitutes for permission: if the user did not specify a frontend stack or explicitly authorize reuse, ask one question and stop implementation. Do not default to plain HTML.
 
 | Existing architecture | Preferred approach | Common trap |
 |---|---|---|

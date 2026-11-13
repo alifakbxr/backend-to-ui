@@ -8,9 +8,9 @@
 
 `backend-to-ui` is an open [Agent Skill](https://agentskills.io/specification) for turning an existing backend into a useful, well-designed frontend. It reads the code you have, understands the product context, maps actual contracts to user tasks, and implements and tests the result. It is not a template, UI kit, or replacement frontend framework.
 
-**One prompt, when your coding agent has access to the repository:**
+**One prompt, when your coding agent has access to the repository and you have already selected or authorized its frontend stack:**
 
-> Use backend-to-ui to build the frontend for this backend.
+> Use backend-to-ui to build the frontend for this backend using Vue + Inertia.
 
 ## Install
 
@@ -29,6 +29,19 @@ npx skills add alifakbxr/backend-to-ui --skill backend-to-ui -g
 **Published source:** [alifakbxr/backend-to-ui](https://github.com/alifakbxr/backend-to-ui) is public. Verify discovery with `npx skills add alifakbxr/backend-to-ui --list`. If you fork the repository, change the owner in installation commands.
 
 Compatible Agent Skills hosts include Claude Code, Gemini CLI, Antigravity, and Codex. Host capabilities vary: the skill provides instructions, not an automatic execution environment. [Detailed installation and usage](docs/USAGE.md).
+
+## Tech stack: ask first, never assume
+
+**New in 1.2:** If your request is to **build or redesign frontend code** and you have not specified a frontend stack, the agent first asks which stack you want. Even when it detects an existing Vue, React or plain-HTML frontend, it asks for confirmation unless you explicitly said **"use the existing frontend stack"**.
+
+- `Use backend-to-ui. Build the UI with Vue 3 + Inertia.` → implement in one request.
+- `Use backend-to-ui. Reuse the existing frontend stack.` → implement if the stack is clearly present.
+- `Use backend-to-ui. Build the UI for this API.` → **ask for the frontend stack before writing code.**
+- `Use backend-to-ui to audit this existing UI.` → perform a read-only audit without blocking on stack selection.
+
+The skill never silently defaults to native HTML/CSS/JavaScript. Choosing native HTML explicitly is valid.
+
+See the [mandatory stack policy](skills/backend-to-ui/references/stack-selection.md) and [evaluation matrix](evals/README.md). The *one-shot* promise applies when this decision is already resolved.
 
 ## What it does
 
@@ -112,6 +125,8 @@ CI runs the same structural checks on pull requests. These verify metadata, refe
 - [Contributing](CONTRIBUTING.md)
 - [Changelog](CHANGELOG.md)
 - [Design research & acknowledgments](docs/DESIGN_SOURCES.md)
+- [Behavioral evaluation and evidence protocol](evals/README.md)
+- [Release process](docs/RELEASE.md)
 - [How to publish on skills.sh](docs/PUBLISHING.md)
 
 ## License and acknowledgment

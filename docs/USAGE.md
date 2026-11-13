@@ -35,23 +35,36 @@ npx skills add . --list
 
 The `--list` command confirms discovery of `backend-to-ui` without installing it. To install the local version, run `npx skills add . --skill backend-to-ui`. No network is needed to read the local skill, though `npx` may need to fetch the CLI first.
 
+## Mandatory tech stack choice
+
+Before editing UI code, the skill requires one of: an explicitly named frontend stack, or explicit authorization to reuse an unambiguously detected existing stack. Detecting Vue, React, HTML or another framework in the repository is not enough by itself. **No silent vanilla HTML fallback.**
+
+If neither is provided, expect one direct question. Read-only audits can proceed without selecting a stack.
+
+- `Use backend-to-ui. Build the UI with React.`
+- `Use backend-to-ui. Keep the existing frontend stack and redesign the screens.`
+- `Use backend-to-ui. Build the frontend for this API.` → asks which stack before writing frontend files.
+- `Use backend-to-ui. Use native HTML/CSS/JavaScript.` → native HTML is intentionally selected.
+
+Full policy: [stack-selection.md](../skills/backend-to-ui/references/stack-selection.md).
+
 ## One-shot usage
 
 Minimal:
 
-> Use backend-to-ui to build the frontend for this backend.
+> Use backend-to-ui to build the frontend for this backend with Vue + Inertia.
 
 Add only *real* constraints when necessary:
 
-> Use backend-to-ui for this repository. The product serves shop cashiers on touchscreens. Keep the current design language and payment flows. Implement the checkout UI against existing backend operations, profile rendering and data requests, and test the flows.
+> Use backend-to-ui for this repository. Keep the existing frontend stack. The product serves shop cashiers on touchscreens. Keep the current design language and payment flows. Implement the checkout UI against existing backend operations, profile rendering and data requests, and test the flows.
 
 For an existing frontend:
 
-> Use backend-to-ui to audit and improve the current frontend. Do not change the backend contract or replace the stack. Fix the real user flows and performance bottlenecks, then verify behavior and visual quality.
+> Use backend-to-ui to audit and improve the current frontend using its existing stack. Do not change the backend contract or replace the stack. Fix the real user flows and performance bottlenecks, then verify behavior and visual quality.
 
 ## When the UI is technically correct but ugly
 
-> Use backend-to-ui. This existing UI is generic. Audit the full-page desktop and mobile screenshots first. Identify the dominant user task, compare two product-specific compositions, preserve backend contracts and working features, rebuild the hierarchy, review actual renders and fix serious visual defects before finishing.
+> Use backend-to-ui. Keep the existing frontend stack. This existing UI is generic. Audit the full-page desktop and mobile screenshots first. Identify the dominant user task, compare two product-specific compositions, preserve backend contracts and working features, rebuild the hierarchy, review actual renders and fix serious visual defects before finishing.
 
 The issue might be **composition, density, material or copy**, not a color palette. This skill explicitly rejects a small widget stranded in a wide desktop viewport, fake dashboard chrome or gameplay that looks like a generic SaaS admin page. Read the [visual stop-ship gates](../skills/backend-to-ui/references/visual-review.md).
 
@@ -65,6 +78,7 @@ A skill is instruction, not a guarantee of a polished application. It cannot aut
 
 | Issue | Check |
 | --- | --- |
+| Agent silently builds native HTML | This violates the mandatory stack gate; run [stack-selection.md](../skills/backend-to-ui/references/stack-selection.md) and record a failing evaluation |
 | Skill not discovered | Verify `skills/backend-to-ui/SKILL.md`, run `npx skills add . --list`, restart or reload the agent's skill registry |
 | Agent ignores the skill | Explicitly mention `backend-to-ui` in the prompt; make sure skill files are in the selected agent's search path |
 | UI invents features | Require a route/permission-to-action map and reject elements without supported operations |
