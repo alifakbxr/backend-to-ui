@@ -98,6 +98,28 @@ class StackSelectionTests(unittest.TestCase):
                   "files_changed": [], "message": "Existing UI is too narrow for the desktop."}
         self.assertEqual(grade_case(case, record), ("pass", []))
 
+    def test_existing_frontend_without_backend_reuse_allowed(self):
+        for ident, stack in (
+            ("existing_react_frontend_reuse", "React"),
+            ("existing_angular_frontend_reuse", "Angular"),
+            ("existing_svelte_frontend_reuse", "Svelte"),
+        ):
+            case = self.by_id[ident]
+            self.assertEqual(case["expected"]["action"], "implement")
+            self.assertEqual(case["expected"]["stack"], stack)
+            self.assertEqual(policy_decision(case["input"]), "implement")
+            self.assertNotIn("backend", case["expected"]["gates"])
+
+    def test_existing_frontend_without_consent_asks_first(self):
+        case = self.by_id["existing_react_no_reuse"]
+        self.assertEqual(case["expected"]["action"], "ask_stack")
+        self.assertEqual(policy_decision(case["input"]), "ask_stack")
+
+    def test_frontend_only_read_only_audit(self):
+        case = self.by_id["frontend_only_read_only"]
+        self.assertEqual(case["expected"]["action"], "audit")
+        self.assertEqual(policy_decision(case["input"]), "audit")
+
     def test_missing_question_fails(self):
         case = self.by_id["backend_only_unspecified"]
         record = {"id": case["id"], "action": "ask_stack",

@@ -1,0 +1,46 @@
+name: Build introduction GIF
+
+on:
+  push:
+    branches:
+      - feat/product-ui-scope-gif
+    paths:
+      - .github/workflows/convert-intro.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  convert:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - name: Convert committed introduction MP4 to optimized GIF
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -s media/intro.mp4
+          if ! command -v ffmpeg >/dev/null 2>&1; then
+            sudo apt-get update -qq
+            sudo apt-get install -y -qq ffmpeg
+          fi
+          ffmpeg -hide_banner -loglevel error -y \
+            -i media/intro.mp4 \
+            -filter_complex 'fps=6,scale=640:-1:flags=lanczos,split[s0][s1];[s0]palettegen=max_colors=64:stats_mode=diff[p];[s1][p]paletteuse=dither=bayer:bayer_scale=3' \
+            -loop 0 media/intro.gif
+          test -s media/intro.gif
+          echo "GIF bytes: $(wc -c < media/intro.gif)"
+      - name: Commit GIF and remove obsolete video
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add media/intro.gif
+          git rm media/intro.mp4
+          git commit -m "chore: replace intro MP4 with GIF [skip ci]"
+          git push origin HEAD:feat/product-ui-scope-gif

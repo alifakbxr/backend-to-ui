@@ -1,6 +1,6 @@
 # Adapt to the stack; don't replace it
 
-The correct frontend is the least disruptive implementation **within the frontend stack explicitly selected or authorized by the user**. See [stack-selection.md](stack-selection.md) before editing UI files. Detection never substitutes for permission: if the user did not specify a frontend stack or explicitly authorize reuse, ask one question and stop implementation. Do not default to plain HTML.
+The correct frontend is the least disruptive implementation **within the frontend stack explicitly selected or authorized by the user**. This includes maintaining and redesigning existing frontend-only applications in any framework, not just frontends backed by APIs. See [stack-selection.md](stack-selection.md) before editing UI files. Detection never substitutes for permission: if the user did not specify a frontend stack or explicitly authorize reuse, ask one question and stop implementation. Do not default to plain HTML.
 
 | Existing architecture | Preferred approach | Common trap |
 |---|---|---|
@@ -11,5 +11,7 @@ The correct frontend is the least disruptive implementation **within the fronten
 | Spring/ASP.NET/Go/Rust backends | Match existing transport and generated client/types; decide SSR or SPA based on repo constraints | Inventing JSON envelopes or auth rules |
 | Flutter/SwiftUI/Jetpack Compose | Native asynchronous data layer, paginated lists, lifecycle and cancellation, native navigation and accessibility | Assuming browser/CSS primitives apply |
 | GraphQL/gRPC/realtime | Generated types, cursor connections, streaming and cancellation semantics | N+1 or unbounded realtime update loops |
+
+For existing frontend projects, follow [existing-frontend.md](existing-frontend.md). There is no requirement to create a backend or API where none exists. Inspect established routes, shared components, state, design tokens, interactions and tests before modifying the UI.
 
 Do not install large dependencies, rewrite auth, change the domain schema, or split out a new frontend service without a concrete documented reason. Respect whatever renderer, router, form library and testing stack is already working.
