@@ -19,7 +19,6 @@ REQUIRED_DOCS = (
     "evals/score.py",
     "tests/test_evals.py",
     ".github/workflows/validate.yml",
-    ".github/workflows/convert-intro.yml",
 )
 
 
