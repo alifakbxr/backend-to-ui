@@ -127,7 +127,7 @@ def main() -> None:
     check("![product-ui — introduction](media/intro.gif)" in readme, "README must display the GIF")
     check("[Watch the 30 FPS introduction with audio](media/intro.mp4)" in readme, "README must link the full video")
     check("--skill backend-to-ui" in readme, "README must specify the skill name")
-    check("not a live backend integration recording" in readme, "Demo provenance must be explicit")
+    check("illustrative motion concept" in readme.lower() and "not a claim of live backend integration" in readme.lower(), "Demo provenance must be explicit")
     check("private" in (ROOT / "SECURITY.md").read_text().lower(), "Security reporting guidance missing")
 
     print(f"PASS: Agent Skill metadata, {len(refs)} references, {len(REQUIRED_DOCS)} docs/config files, {link_count} local links, intro GIF and MP4")

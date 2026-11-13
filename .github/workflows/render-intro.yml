@@ -5,6 +5,7 @@ on:
     branches: [feat/new-smooth-intro-video-gif]
     paths:
       - scripts/render_intro.py
+      - tests/validate.py
       - .github/workflows/render-intro.yml
   workflow_dispatch:
 
